@@ -548,7 +548,12 @@ public class ItemGun extends Item
 
         public void save(ItemStack it)
         {
-            NBTTagCompound tag = new NBTTagCompound();
+	    boolean newTag = false;
+            NBTTagCompound tag = it.getTagCompound();
+            if(tag == null) {
+		tag = new NBTTagCompound();
+	    	newTag = true;
+	    }
             tag.setInteger("firetime", firetime);
             tag.setBoolean("explosive", explosive);
             tag.setFloat("explosivepower", explosivepower);
@@ -567,7 +572,8 @@ public class ItemGun extends Item
             tag.setInteger("reloadticker", reloadticker);
             tag.setInteger("pellets", pellets);
             tag.setInteger("knockback", knockback);
-            it.setTagCompound(tag);
+	    if(newTag)
+            	it.setTagCompound(tag);
         }
 
         public void load(ItemStack it)
