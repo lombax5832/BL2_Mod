@@ -135,7 +135,7 @@ public class ItemGun extends Item
     {
     	 GunAtributes atr = new GunAtributes(par1ItemStack);
     	 atr.using = true;
-    	 System.out.println(System.currentTimeMillis() - atr.lasttick);
+    	 //System.out.println(System.currentTimeMillis() - atr.lasttick);
     	 atr.lasttick = (System.currentTimeMillis());
     	 atr.save(par1ItemStack);
     	 return par1ItemStack;
