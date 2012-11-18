@@ -32,7 +32,11 @@ public class ItemGun extends Item
         for (int j = 1; j < 7; j++)
         {
             ItemStack stack = new ItemStack(this, 1, j);
+            GunAtributes atr = new GunAtributes(stack);
             l.add(stack);
+            atr.clipsize = 4;
+            atr.bulletsleft = 1;
+            atr.save(stack);
         }
     }
 
@@ -50,7 +54,7 @@ public class ItemGun extends Item
     	}
     	else if(atr.bulletsleft > 1)
     	{
-    		return ((atr.clipsize - atr.bulletsleft) / ((float)atr.clipsize));
+    		return (((atr.clipsize - 1) - (atr.bulletsleft - 1)) / ((float)atr.clipsize - 1));
     	}else if(atr.reloadticker >= 0)
     	{
     		return (atr.reloadticker / ((float)atr.reloadtime));
@@ -64,7 +68,6 @@ public class ItemGun extends Item
 			ifS = "s";
 		}
     	return ifS;
-    	
     }
     
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
@@ -79,6 +82,9 @@ public class ItemGun extends Item
 		par3List.add("Ammo: " + getBulletsLeftInfo(par1ItemStack));
 		par3List.add("Consumes " + atr.ammoPerShot + " bullet"+s(atr.ammoPerShot)+" per shot.");
 		par3List.add("Reload: " + (float) (atr.reloadtime / 20) + " seconds");
+		if(atr.explosive == true){
+			par3List.add("Bullets explode on impact.");
+		}
 	 }
 
     public int getBulletsLeft(ItemStack par1ItemStack){
@@ -131,10 +137,26 @@ public class ItemGun extends Item
     {
         GunAtributes atr = new GunAtributes(par1ItemStack);
 
-        if (par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getCurrentEquippedItem() == par1ItemStack && atr.reloadticker > 0)
+        //System.out.println(atr.bulletsleft);
+        //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
+        //System.out.println(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true);
+        if(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack){
+        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0)
+		    {
+				atr.bulletsleft = 1;
+		        atr.reloadticker = atr.reloadtime;
+		        atr.save(par1ItemStack);
+		        
+		        return;
+		    }
+        }
+
+        if (par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack && atr.reloadticker > 0)
         {
         	boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
-        	if(var5 || canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true){
+        	
+        	
+        	if(var5 || canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getHeldItem().getItemDamage(), par1ItemStack) == true){
         		
         		atr.reloadticker--;
 
@@ -142,7 +164,7 @@ public class ItemGun extends Item
 	            {
 	            	for(int i=0;i < (atr.clipsize - 1); i++){
 	            		
-	            		if(var5 || reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack)){
+	            		if(var5 || reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getHeldItem().getItemDamage(), par1ItemStack)){
 	            			atr.bulletsleft++;
 	            		}
 	            		//atr.bulletsleft++;
@@ -152,15 +174,17 @@ public class ItemGun extends Item
 
             atr.save(par1ItemStack);
         }
-
-        if (!(par3Entity instanceof EntityPlayer))
+        else
         {
-            return;
+        	atr.reloadticker = 0;
+        	atr.save(par1ItemStack);
         }
-
-        //System.out.println(Mouse.isButtonDown(1) && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getCurrentEquippedItem() == par1ItemStack);
         
-        if (Mouse.isButtonDown(1) && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getCurrentEquippedItem() == par1ItemStack)
+        
+
+        //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
+        
+        if (Mouse.isButtonDown(1) && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack)
         {
             if (atr.reloadticker > 0)
             {
@@ -173,6 +197,7 @@ public class ItemGun extends Item
                 atr.save(par1ItemStack);
                 return;
             }
+            
 
             //System.out.println(atr.bulletsleft);
             boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
@@ -183,14 +208,7 @@ public class ItemGun extends Item
             {
             	atr.fireticker = 0;
             	atr.bulletsleft -= atr.ammoPerShot;
-            	if (atr.bulletsleft < atr.ammoPerShot)
-	            {
-            		atr.bulletsleft = 1;
-	                atr.reloadticker = atr.reloadtime;
-	                atr.save(par1ItemStack);
-	                
-	                return;
-	            }
+            	
             	
             
                 EntityBullet var8 = new EntityBullet(par2World, ((EntityPlayer)par3Entity), atr.bulletspeed, atr.damage, atr.explosive, atr.explosivepower, atr.accuracy, atr.knockback);
