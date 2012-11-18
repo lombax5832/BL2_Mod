@@ -43,16 +43,19 @@ public class ItemGun extends Item
     
     public float getDamageForItemStack(ItemStack stack)
     {
+    	
     	GunAtributes atr = new GunAtributes(stack);
-    	if(atr.bulletsleft > 1)
+    	if(atr.bulletsleft == 1 && atr.reloadticker == 0){
+    		return 1;
+    	}
+    	else if(atr.bulletsleft > 1)
     	{
     		return ((atr.clipsize - atr.bulletsleft) / ((float)atr.clipsize));
     	}else if(atr.reloadticker >= 0)
     	{
     		return (atr.reloadticker / ((float)atr.reloadtime));
     	}
-    	
-    	return 100;
+    	return 0;
     }
     
     public String s(int par1){
@@ -130,19 +133,22 @@ public class ItemGun extends Item
 
         if (par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getCurrentEquippedItem() == par1ItemStack && atr.reloadticker > 0)
         {
+        	
+        	if(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true){
             atr.reloadticker--;
 
-            if (atr.reloadticker <= 0)
-            {
-            	for(int i=0;i < (atr.clipsize - 1); i++){
-            		boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
-            		
-            		if(var5 || reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack)){
-            			atr.bulletsleft++;
-            		}
-            		//atr.bulletsleft++;
-            	}
-            }
+	            if (atr.reloadticker <= 0)
+	            {
+	            	for(int i=0;i < (atr.clipsize - 1); i++){
+	            		boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
+	            		
+	            		if(var5 || reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack)){
+	            			atr.bulletsleft++;
+	            		}
+	            		//atr.bulletsleft++;
+	            	}
+	            }
+        	}
 
             atr.save(par1ItemStack);
         }
@@ -213,12 +219,39 @@ public class ItemGun extends Item
     public boolean consumeBullet(EntityPlayer player, GunAtributes atr, ItemStack is)
     {
         ItemStack stack = null;
-            if (atr.bulletsleft > 0){
-                atr.bulletsleft-= atr.ammoPerShot;
-                atr.save(stack);
-                return true;
+        if (atr.bulletsleft > 0){
+            return true;
+        }
+		return false;
+    }
+    
+    public boolean canReload(EntityPlayer player, int type, ItemStack is)
+    {
+        ItemStack stack = null;
+        
+        for (int i = 0; i < 36; i++)
+        {
+            stack = player.inventory.getStackInSlot(i);
+
+            if (stack != null && stack.getItemDamage() == type - 1)
+            {
+                if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
+                {
+                    ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
+
+                    if(stor.bullets >= 1)
+                    {
+                        return true;
+                    }
+                }
+                else if (stack.itemID == BL2Core.bullets.shiftedIndex)
+                {
+                    return true;
+                }
             }
-			return false;
+        }
+
+        return false;
     }
     
     public boolean reload(EntityPlayer player, int type, ItemStack is)
@@ -238,7 +271,7 @@ public class ItemGun extends Item
                 {
                     ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
 
-                    if(stor.bullets >= atr.clipsize)
+                    if(stor.bullets >= 1)
                     {
                         stor.bullets--;
                         atr.bulletsleft++;
