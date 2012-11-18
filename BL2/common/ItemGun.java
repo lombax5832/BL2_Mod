@@ -32,11 +32,9 @@ public class ItemGun extends Item
         for (int j = 1; j < 7; j++)
         {
             ItemStack stack = new ItemStack(this, 1, j);
-            GunAtributes atr = new GunAtributes(stack);
+            //GunAtributes atr = new GunAtributes(stack);
             l.add(stack);
-            atr.clipsize = 4;
-            atr.bulletsleft = 1;
-            atr.save(stack);
+            //atr.save(stack);
         }
     }
 
