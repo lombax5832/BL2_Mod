@@ -47,12 +47,21 @@ public class ItemGun extends Item
     	if(atr.bulletsleft > 1)
     	{
     		return ((atr.clipsize - atr.bulletsleft) / ((float)atr.clipsize));
-    	}
-    	if(atr.reloadticker > 0)
+    	}else if(atr.reloadticker >= 0)
     	{
     		return (atr.reloadticker / ((float)atr.reloadtime));
     	}
-    	return 0;
+    	
+    	return 100;
+    }
+    
+    public String s(int par1){
+    	String ifS = "";
+		if(par1 > 1){
+			ifS = "s";
+		}
+    	return ifS;
+    	
     }
     
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
@@ -65,6 +74,7 @@ public class ItemGun extends Item
     	par3List.add("DPS: " + getDPS(par1ItemStack) + " Hearts/second");
     	par3List.add("Damage: " + damage/2 + " Hearts");
 		par3List.add("Ammo: " + getBulletsLeftInfo(par1ItemStack));
+		par3List.add("Consumes " + atr.ammoPerShot + " bullet"+s(atr.ammoPerShot)+" per shot.");
 		par3List.add("Reload: " + (float) (atr.reloadtime / 20) + " seconds");
 	 }
 
@@ -125,7 +135,9 @@ public class ItemGun extends Item
             if (atr.reloadticker <= 0)
             {
             	for(int i=0;i < (atr.clipsize - 1); i++){
-            		if(reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack)){
+            		boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
+            		
+            		if(var5 || reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack)){
             			atr.bulletsleft++;
             		}
             		//atr.bulletsleft++;
@@ -418,11 +430,22 @@ public class ItemGun extends Item
         atr.explosivepower = (float) ((Math.random() * (3 - 2)) + 2);
         atr.clipsize = (int) ((Math.random() * (45 - 20)) + 20) + 1;
         atr.reloadtime = (int) ((Math.random() * (100 - 40)) + 40) + 1;
-        atr.ammoPerShot = (int) ((Math.random() * (2 - 1)) + 1);
+        //atr.ammoPerShot = (int) ((Math.random() * (3 - 1)) + 1);
         atr.damage = (int) ((Math.random() * (6 - 2)) + 2) + 1;
         
         
         float i = (float) Math.random() * 100;
+        
+        if(i < 30)
+        {
+        	atr.ammoPerShot = 2;
+        	//chance = num
+        }else
+        {
+        	atr.ammoPerShot = 1;
+        	//chance = 100% - num x - 1
+        }
+        
         if(atr.Company == 0)
         {
         	float g = (float) Math.random() * 100;
@@ -568,22 +591,8 @@ public class ItemGun extends Item
         	atr.bulletspeed *= .5;
         }
         
-        
-        if(i < 10)
-        {
-        	
-        	//chance = num
-        }else
-        if(i < 20)
-        {
-        	//change = num - 1num
-        }else
-        {
-        	//chance = 100% - num x - 1
-        }
-        
-        System.out.println("comp:" + atr.Company);
-        System.out.println("type" +atr.guntype);
+//        System.out.println("comp:" + atr.Company);
+//        System.out.println("type" +atr.guntype);
         
         atr.save(re);
         re.setItemDamage(atr.guntype);
