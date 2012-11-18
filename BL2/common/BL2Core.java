@@ -1,8 +1,10 @@
 package BL2.common;
 
+import vazkii.codebase.common.CommonUtils;
 import net.minecraft.src.BaseMod;
 import net.minecraft.src.Item;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
@@ -32,17 +34,26 @@ public class BL2Core
     public void init(FMLInitializationEvent event)
     {
         EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
-        registerHandlers();
+        
         guns = new ItemGun(16000);
         bullets = new ItemBullets(16001);
         bandoiler = new ItemBandoiler(16002);
         temp = new ItemTemp(16003);
         LanguageRegistry.addName(guns, "Gun");
+        registerHandlers();
     }
 
-    @SideOnly(Side.CLIENT)
     public void registerHandlers()
     {
-        RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, new RenderBullet());
+    	try
+    	{
+    		Class.forName("net.minecraft.src.Render");
+    		
+    		//client
+    		//RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, new RenderBullet());
+    	}catch(Exception ex)
+    	{
+    		//server
+    	}
     }
 }

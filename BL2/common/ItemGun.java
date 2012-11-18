@@ -131,11 +131,21 @@ public class ItemGun extends Item
 		return Info;
     }
     
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+    {
+    	 GunAtributes atr = new GunAtributes(par1ItemStack);
+    	 atr.using = true;
+    	 System.out.println(System.currentTimeMillis() - atr.lasttick);
+    	 atr.lasttick = (System.currentTimeMillis());
+    	 atr.save(par1ItemStack);
+    	 return par1ItemStack;
+    }
+    
     public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
     {
         GunAtributes atr = new GunAtributes(par1ItemStack);
 
-        //System.out.println(atr.bulletsleft);
+        
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
         //System.out.println(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true);
         if(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack){
@@ -182,7 +192,7 @@ public class ItemGun extends Item
 
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
         
-        if (Mouse.isButtonDown(1) && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack)
+        if (atr.using && (System.currentTimeMillis() - atr.lasttick) < 250 && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack)
         {
             if (atr.reloadticker > 0)
             {
@@ -675,6 +685,9 @@ public class ItemGun extends Item
         public int reloadticker = 1;
         public int pellets;
         public int knockback;
+        
+        public boolean using;
+        public long lasttick;
 
         public GunAtributes(ItemStack it)
         {
@@ -708,6 +721,9 @@ public class ItemGun extends Item
             tag.setInteger("reloadticker", reloadticker);
             tag.setInteger("pellets", pellets);
             tag.setInteger("knockback", knockback);
+            
+            tag.setBoolean("using", using);
+            tag.setLong("lasttick", lasttick);
 		    if(newTag)
 	            	it.setTagCompound(tag);
 	        }
@@ -740,6 +756,9 @@ public class ItemGun extends Item
             reloadticker = tag.getInteger("reloadticker");
             pellets = tag.getInteger("pellets");
             knockback = tag.getInteger("knockback");
+            
+            using = tag.getBoolean("using");
+            lasttick = tag.getLong("lasttick");
         }
     }
 }
