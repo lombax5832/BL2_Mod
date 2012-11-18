@@ -43,8 +43,8 @@ public class ItemGun extends Item
     
     public float getDamageForItemStack(ItemStack stack)
     {
-    	
     	GunAtributes atr = new GunAtributes(stack);
+    	
     	if(atr.bulletsleft == 1 && atr.reloadticker == 0){
     		return 1;
     	}
@@ -133,14 +133,14 @@ public class ItemGun extends Item
 
         if (par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getCurrentEquippedItem() == par1ItemStack && atr.reloadticker > 0)
         {
-        	
-        	if(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true){
-            atr.reloadticker--;
+        	boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
+        	if(var5 || canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true){
+        		
+        		atr.reloadticker--;
 
 	            if (atr.reloadticker <= 0)
 	            {
 	            	for(int i=0;i < (atr.clipsize - 1); i++){
-	            		boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
 	            		
 	            		if(var5 || reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack)){
 	            			atr.bulletsleft++;
@@ -158,6 +158,8 @@ public class ItemGun extends Item
             return;
         }
 
+        //System.out.println(Mouse.isButtonDown(1) && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getCurrentEquippedItem() == par1ItemStack);
+        
         if (Mouse.isButtonDown(1) && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getCurrentEquippedItem() == par1ItemStack)
         {
             if (atr.reloadticker > 0)
@@ -175,6 +177,7 @@ public class ItemGun extends Item
             //System.out.println(atr.bulletsleft);
             boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
             
+            //System.out.println(consumeBullet(((EntityPlayer)par3Entity), atr, par1ItemStack));
             
             if (var5 || consumeBullet(((EntityPlayer)par3Entity), atr, par1ItemStack))// || par3EntityPlayer.inventory.hasItem(Item.arrow.shiftedIndex))
             {
