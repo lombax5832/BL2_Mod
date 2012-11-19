@@ -2,6 +2,8 @@ package BL2.common;
 
 import java.util.List;
 
+import BL2.common.ItemGun.GunAtributes;
+
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
@@ -11,7 +13,7 @@ import net.minecraft.src.World;
 
 public class ItemBandoiler extends Item
 {
-	public static final String[] ammoTypes = new String[] {"Pistol", "SMG", "Assault Rifle", "Rocket Launcher", "Sniper", "Shotgun"};
+	public static final String[] ammoTypes = new String[] {"", "Pistol", "SMG", "Assault Rifle", "Rocket Launcher", "Sniper", "Shotgun"};
 	
 	protected ItemBandoiler(int id)
 	{
@@ -19,12 +21,12 @@ public class ItemBandoiler extends Item
 		this.maxStackSize = 1;
 		this.setCreativeTab(BL2Core.tabBL2);
 		this.setHasSubtypes(true);
-		this.setMaxDamage(0);
+		this.setMaxDamage(100);
 	}
 
 	public void getSubItems(int i, CreativeTabs tabs, List l)
 	{
-		for(int j = 0; j < 6; j++)
+		for(int j = 1; j < 7; j++)
 		{
 			ItemStack stack = new ItemStack(this, 1, j);
 			BandStor stor = new BandStor(stack);
@@ -36,10 +38,15 @@ public class ItemBandoiler extends Item
 
 	public int getIconFromDamage(int par1)
     {
-		return 32 + par1;
+		return 31 + par1;
     }
 	
-	
+	public float getDamageForItemStack(ItemStack stack)
+    {
+    	BandStor stor = new BandStor(stack);
+    	
+    	return (((maxbullets[stack.getItemDamage()]) - (stor.bullets)) / ((float)(maxbullets[stack.getItemDamage()])));
+    }
 
 	public String getTextureFile(){
 		return "/BL2/textures/Items.png";
@@ -79,6 +86,7 @@ public class ItemBandoiler extends Item
 				{
 					if(par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(BL2Core.bullets, 64, par1ItemStack.getItemDamage())))
 					{
+						System.out.println(true);
 						stor.bullets -= 64;
 					}else
 					{
@@ -115,7 +123,7 @@ public class ItemBandoiler extends Item
         return par1ItemStack;
     }
 
-	public static final int[] maxbullets = new int[]{400, 400, 320, 24, 100, 100};
+	public static final int[] maxbullets = new int[]{0, 400, 400, 320, 24, 100, 100};
 
 	public static class BandStor
     {

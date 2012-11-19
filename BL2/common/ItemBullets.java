@@ -10,7 +10,7 @@ import net.minecraft.src.NBTTagCompound;
 
 public class ItemBullets extends Item
 {
-	public static final String[] ammoTypes = new String[] {"Pistol", "SMG", "Assault Rifle", "Rocket Launcher", "Sniper", "Shotgun"};
+	public static final String[] ammoTypes = new String[] {"", "Pistol", "SMG", "Assault Rifle", "Rocket Launcher", "Sniper", "Shotgun"};
 	
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	 {
@@ -32,7 +32,7 @@ public class ItemBullets extends Item
 
     public void getSubItems(int i, CreativeTabs tabs, List l)
     {
-        for (int j = 0; j < 6; j++)
+        for (int j = 1; j < 7; j++)
         {
             ItemStack stack = new ItemStack(this, 64, j);
             l.add(stack);
@@ -41,7 +41,7 @@ public class ItemBullets extends Item
 
     public int getIconFromDamage(int par1)
     {
-        return 16 + par1;
+        return 15 + par1;
     }
 
     public String getTextureFile()

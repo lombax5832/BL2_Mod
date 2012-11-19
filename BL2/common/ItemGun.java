@@ -3,6 +3,7 @@ package BL2.common;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.input.Keyboard;
 
 import BL2.common.ItemBandoiler.BandStor;
 
@@ -50,12 +51,13 @@ public class ItemGun extends Item
     	if(atr.bulletsleft == 1 && atr.reloadticker == 0){
     		return 1;
     	}
+    	else if(atr.reloadticker > 0)
+    	{
+    		return (atr.reloadticker / ((float)atr.reloadtime));
+    	}
     	else if(atr.bulletsleft > 1)
     	{
     		return (((atr.clipsize - 1) - (atr.bulletsleft - 1)) / ((float)atr.clipsize - 1));
-    	}else if(atr.reloadticker >= 0)
-    	{
-    		return (atr.reloadticker / ((float)atr.reloadtime));
     	}
     	return 0;
     }
@@ -141,17 +143,32 @@ public class ItemGun extends Item
     	 return par1ItemStack;
     }
     
+    public boolean noAmmo(GunAtributes atr){
+		if(atr.bulletsleft >= 1){
+			return true;
+		}
+    	return false;
+    }
+    
+    public boolean fullAmmo(GunAtributes atr){
+		if(atr.bulletsleft == atr.clipsize){
+			return true;
+		}
+    	return false;
+    }
+    
     public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
     {
         GunAtributes atr = new GunAtributes(par1ItemStack);
 
+        //System.out.println(Keyboard.isKeyDown(19));
         
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
         //System.out.println(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true);
         if(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack){
-        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0)
+        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0 || (Keyboard.isKeyDown(19) && !fullAmmo(atr)))
 		    {
-				atr.bulletsleft = 1;
+				//atr.bulletsleft = 1;
 		        atr.reloadticker = atr.reloadtime;
 		        atr.save(par1ItemStack);
 		        
@@ -159,6 +176,8 @@ public class ItemGun extends Item
 		    }
         }
 
+        //System.out.println(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getHeldItem().getItemDamage(), par1ItemStack) == true);
+        
         if (par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack && atr.reloadticker > 0)
         {
         	boolean var5 = ((EntityPlayer)par3Entity).capabilities.isCreativeMode;
@@ -170,7 +189,8 @@ public class ItemGun extends Item
 
 	            if (atr.reloadticker <= 0)
 	            {
-	            	for(int i=0;i < (atr.clipsize - 1); i++){
+	            	int needed = bulletsNeeded(par1ItemStack);
+	            	for(int i=0;i < needed; i++){
 	            		
 	            		if(var5 || reload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getHeldItem().getItemDamage(), par1ItemStack)){
 	            			atr.bulletsleft++;
@@ -244,6 +264,11 @@ public class ItemGun extends Item
 //    	}
 //		return false;
 //    }
+    
+    public int bulletsNeeded(ItemStack is){
+    	GunAtributes atr = new GunAtributes(is);
+    	return (atr.clipsize - atr.bulletsleft);
+    }
 
     public boolean consumeBullet(EntityPlayer player, GunAtributes atr, ItemStack is)
     {
@@ -262,7 +287,7 @@ public class ItemGun extends Item
         {
             stack = player.inventory.getStackInSlot(i);
 
-            if (stack != null && stack.getItemDamage() == type - 1)
+            if (stack != null && stack.getItemDamage() == type)
             {
                 if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
                 {
@@ -294,7 +319,7 @@ public class ItemGun extends Item
         {
             stack = player.inventory.getStackInSlot(i);
 
-            if (stack != null && stack.getItemDamage() == type - 1)
+            if (stack != null && stack.getItemDamage() == type)
             {
                 if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
                 {

@@ -15,7 +15,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = "BL2", name = "Borderlands 2", version = "0.5(1.4.5)")
+@Mod(modid = "BL2", name = "Borderlands 2", version = "0.6(1.4.5)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class BL2Core
 {
