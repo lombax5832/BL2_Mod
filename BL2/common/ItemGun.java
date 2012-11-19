@@ -48,7 +48,7 @@ public class ItemGun extends Item
     {
     	GunAtributes atr = new GunAtributes(stack);
     	
-    	if(atr.bulletsleft == 1 && atr.reloadticker == 0){
+    	if(atr.bulletsleft <= 1 && atr.reloadticker == 0){
     		return 1;
     	}
     	else if(atr.reloadticker > 0)
