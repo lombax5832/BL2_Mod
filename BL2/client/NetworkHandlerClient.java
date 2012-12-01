@@ -67,18 +67,24 @@ public class NetworkHandlerClient extends NetworkHandler
                     double x = din.readDouble();
                     double y = din.readDouble();
                     double z = din.readDouble();
-                    double px = din.readDouble();
-                    double py = din.readDouble();
-                    double pz = din.readDouble();
+String name = "";
+		while(true)
+		{
+			try
+			{
+				name += din.readChar();
+			}catch(Exception ex)
+			{
+				break;
+			}
+		}
                     WorldClient world = Minecraft.getMinecraft().theWorld;
 
                     if (world.provider.dimensionId != dimention)
                     {
                         return;
                     }
-                    if(player == null){
-                    	player = world.getClosestPlayer(px, py, pz, 16);
-                    }
+player = world.getPlayerEntityByName(name);
                     
                     if(player == p)
                     {
