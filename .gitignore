@@ -161,3 +161,31 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+#############
+## MINECRAFT
+#############
+
+/bin/*
+/conf/*
+/docs/*
+/eclipse/*
+/forge/*
+/jars/*
+/lib/*
+/logs/*
+/modsrc/*
+/reobf/*
+/runtime/*
+/temp/*
+
+/src/minecraft/*
+/src/minecraft_server/*
+/src/common/*
+/vazkii/*
+!/src/common/dries007/
+!/src/common/mcmod.info
+
+!/BL2/*.png
+*.bat
+*.sh
