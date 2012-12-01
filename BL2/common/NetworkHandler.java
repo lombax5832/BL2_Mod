@@ -43,14 +43,7 @@ public class NetworkHandler implements IPacketHandler
             while (players.hasNext())
             {
                 EntityPlayer player = players.next();
-
-                if (player.getDistanceSq(px + x, py + y, pz + z) == 0D)
-                {
-                	System.out.println("added for");
-                	y =+ 1.5D;
-                	out.writeDouble(y);
-                    PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
-                }
+                
                 if (player.getDistanceSq(px + x, py + y, pz + z) < 256.0D)
                 {
                 	System.out.println("added for");

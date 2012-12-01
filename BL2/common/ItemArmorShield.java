@@ -52,7 +52,6 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		NBTTagCompound tag = it.getTagCompound();
 		if(tag == null)
 		{
-			
 			tag = new NBTTagCompound();
 			it.setTagCompound(tag);
 		}
@@ -122,7 +121,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 			tag.setInteger("regenticker", 100);
 			
 			//got hit
-			tag.setInteger("hitticker", 20);
+			tag.setInteger("hitticker", 2000);
 			
 			return new ISpecialArmor.ArmorProperties(10, damage / absorbed, Integer.MAX_VALUE);
 		}
