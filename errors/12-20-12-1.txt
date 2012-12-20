@@ -1,0 +1,29 @@
+2012-12-20 18:36:09 [INFO] [ForgeModLoader] Forge Mod Loader version 4.5.2.459 for Minecraft 1.4.5 loading
+2012-12-20 18:36:10 [INFO] [STDOUT] 27 achievements
+2012-12-20 18:36:11 [INFO] [STDOUT] 208 recipes
+2012-12-20 18:36:11 [INFO] [STDOUT] Setting user: Player83, -
+2012-12-20 18:36:11 [INFO] [STDERR] Client asked for parameter: server
+2012-12-20 18:36:11 [INFO] [STDOUT] LWJGL Version: 2.4.2
+2012-12-20 18:36:12 [INFO] [ForgeModLoader] Attempting early MinecraftForge initialization
+2012-12-20 18:36:12 [INFO] [STDOUT] MinecraftForge v6.4.1.407 Initialized
+2012-12-20 18:36:12 [INFO] [ForgeModLoader] MinecraftForge v6.4.1.407 Initialized
+2012-12-20 18:36:12 [INFO] [STDOUT] Replaced 84 ore recipies
+2012-12-20 18:36:12 [INFO] [ForgeModLoader] Completed early MinecraftForge initialization
+2012-12-20 18:36:12 [INFO] [ForgeModLoader] Searching C:\Modding\1.4.5\BL2 407\jars\mods for mods
+2012-12-20 18:36:12 [INFO] [ForgeModLoader] Attempting to reparse the mod container bin
+2012-12-20 18:36:13 [INFO] [ForgeModLoader] Forge Mod Loader has identified 6 mods to load
+2012-12-20 18:36:13 [INFO] [ForgeModLoader] Configured a dormant chunk cache size of 0
+2012-12-20 18:36:14 [INFO] [ForgeModLoader] Forge Mod Loader has successfully loaded 6 mods
+2012-12-20 18:36:33 [INFO] [STDOUT] Connecting to 127.0.0.1, 25565
+2012-12-20 18:37:34 [INFO] [STDERR] java.net.SocketTimeoutException: Read timed out
+2012-12-20 18:37:34 [INFO] [STDERR] 	at java.net.SocketInputStream.socketRead0(Native Method)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at java.net.SocketInputStream.read(Unknown Source)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at java.net.SocketInputStream.read(Unknown Source)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at java.io.FilterInputStream.read(Unknown Source)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at org.bouncycastle.crypto.io.CipherInputStream.func_74852_a(CipherInputStream.java:42)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at org.bouncycastle.crypto.io.CipherInputStream.read(CipherInputStream.java:108)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at java.io.FilterInputStream.read(Unknown Source)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at net.minecraft.src.Packet.readPacket(Packet.java:138)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at net.minecraft.src.TcpConnection.readPacket(TcpConnection.java:317)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at net.minecraft.src.TcpConnection.readNetworkPacket(TcpConnection.java:537)
+2012-12-20 18:37:34 [INFO] [STDERR] 	at net.minecraft.src.TcpReaderThread.run(TcpReaderThread.java:23)
