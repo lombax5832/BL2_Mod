@@ -7,4 +7,9 @@ public class BL2Proxy {
     {
 
     }
+	
+	public void registerKeyBinding()
+	{
+		
+	}
 }

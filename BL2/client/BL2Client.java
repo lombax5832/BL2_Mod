@@ -1,7 +1,9 @@
 package BL2.client;
 
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import BL2.common.BL2Core;
+import BL2.common.BL2KeyHandler;
 import BL2.common.BL2Proxy;
 import BL2.common.EntityBullet;
 import BL2.common.RenderBullet;
@@ -18,4 +20,8 @@ public class BL2Client extends BL2Proxy{
             BL2Core.shieldrenderid = RenderingRegistry.addNewArmourRendererPrefix("bl2/");
     }
 
+	public void registerKeyBinding()
+	{
+		KeyBindingRegistry.registerKeyBinding(new BL2KeyHandler());
+	}
 }

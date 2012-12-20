@@ -5,6 +5,8 @@ import vazkii.codebase.common.CommonUtils;
 import net.minecraft.src.BaseMod;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
+import net.minecraft.src.KeyBinding;
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ITickHandler;
@@ -50,6 +52,7 @@ public class BL2Core implements ITickHandler
     @Mod.Init
     public void init(FMLInitializationEvent event)
     {
+    	proxy.registerKeyBinding();
     	proxy.registerRenderInformation();
     	
     	EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);

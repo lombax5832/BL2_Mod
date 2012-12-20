@@ -5,6 +5,9 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Side;
+
 import BL2.common.ItemBandoiler.BandStor;
 
 import net.minecraft.src.*;
@@ -157,6 +160,13 @@ public class ItemGun extends Item
     	return false;
     }
     
+    public static void reload(ItemStack par1ItemStack)
+    {
+    	GunAtributes atr = new GunAtributes(par1ItemStack);
+    	atr.reloadticker = atr.reloadtime;
+        atr.save(par1ItemStack);
+    }
+    
     public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
     {
         GunAtributes atr = new GunAtributes(par1ItemStack);
@@ -165,15 +175,21 @@ public class ItemGun extends Item
         
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
         //System.out.println(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true);
-        if(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack){
-        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0 || (Keyboard.isKeyDown(19) && !fullAmmo(atr)))
-		    {
-				//atr.bulletsleft = 1;
-		        atr.reloadticker = atr.reloadtime;
-		        atr.save(par1ItemStack);
-		        
-		        return;
-		    }
+        if(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack)
+        {
+        	try
+        	{
+        		Class.forName("net.minecraft.src.KeyBinding");
+        		//client
+	        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0 || (BL2KeyHandler.reloadKey.isPressed() && !fullAmmo(atr)))
+			    {
+					reload(par1ItemStack);
+			        return;
+			    }
+        	}catch(Exception ex)
+        	{
+        		//server
+        	}
         }
 
         //System.out.println(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getHeldItem().getItemDamage(), par1ItemStack) == true);
@@ -499,7 +515,7 @@ public class ItemGun extends Item
     public static ItemStack getRandomGun()
     {
         ItemStack re = new ItemStack(BL2Core.guns);
-        GunAtributes atr = ((ItemGun)BL2Core.guns).new GunAtributes(re);
+        GunAtributes atr = new GunAtributes(re);
         /*
          * set the random atributes here :D
          *
@@ -686,7 +702,7 @@ public class ItemGun extends Item
         return re;
     }
 
-    public class GunAtributes
+    public static class GunAtributes
     {
         /**
          * number of ticks between fires, should be >0

@@ -45,52 +45,80 @@ public class NetworkHandlerClient extends NetworkHandler
 		}
 	}*/
 	
+	public void sendReloaderPacket()
+	{
+		try
+        {
+			ByteArrayOutputStream baout = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baout);
+            out.writeByte(1);
+            out.close();
+            Packet250CustomPayload packet = new Packet250CustomPayload();
+            packet.channel = "bl2";
+            packet.isChunkDataPacket = false;
+            packet.data = baout.toByteArray();
+            packet.length = baout.size();
+
+            PacketDispatcher.sendPacketToServer(packet);
+        }
+        catch (Exception ex)
+        {
+        	ex.printStackTrace();
+        }
+	}
+	
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p)
     {
-		
-		 EntityPlayer player = null;
-		
-		System.out.println("recieved packet");
+		//System.out.println("recieved packet");
         ByteArrayInputStream in = new ByteArrayInputStream(packet.data, 1, packet.data.length - 1);
 
         try
         {
-
+        	//DataInputStream din = new DataInputStream(in);
             switch (packet.data[0])
             {
                 case NetworkHandler.particlePacketID:
                 {
-                	System.out.println("spawned");
+                	//System.out.println("spawned");
                 	DataInputStream din = new DataInputStream(in);
-                	int dimention = din.readInt();
+                	int dimension = din.readInt();
                 	int index = din.readInt();
                     double x = din.readDouble();
                     double y = din.readDouble();
                     double z = din.readDouble();
-                    double px = din.readDouble();
-                    double py = din.readDouble();
-                    double pz = din.readDouble();
+                    int playerId = din.readInt();
+                    //String username = din.readUTF();
+//                    while(true)
+//                    {
+//                    	try
+//                    	{
+//                    		username += din.readChar();
+//                    	} catch (NullPointerException e)
+//            		    {
+//            		    	System.out.print("");
+//                    		break;
+//            		    }
+//                    }
                     WorldClient world = Minecraft.getMinecraft().theWorld;
 
-                    if (world.provider.dimensionId != dimention)
+                    EntityPlayer player = (EntityPlayer) world.getEntityByID(playerId);
+                    
+                    if (world.provider.dimensionId != dimension)
                     {
                         return;
                     }
-                    if(player == null){
-                    	player = world.getClosestPlayer(px, py, pz, 16);
-                    }
+                    //EntityPlayer player = world.getPlayerEntityByName(username);
                     
-                    if(player == p)
-                    {
-                    	player = (EntityPlayer)p;
-                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y-1.5, z, Color.CYAN);
-                    	ModLoader.getMinecraftInstance().effectRenderer.addEffect(fx);
-                    }
-                    else
-                    {
-                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y, z, Color.CYAN);
-                    	ModLoader.getMinecraftInstance().effectRenderer.addEffect(fx);
-                    }
+//                    if((Player)player == p)
+//                    {
+//                    	player = (EntityPlayer)p;
+//                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y-1.5, z, Color.CYAN);
+//                    	ModLoader.getMinecraftInstance().effectRenderer.addEffect(fx);
+//                    }else
+//                    {
+//                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y, z, Color.CYAN);
+//                    	ModLoader.getMinecraftInstance().effectRenderer.addEffect(fx);
+//                    }
                     
                 }
             }
