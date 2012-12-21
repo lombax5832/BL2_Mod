@@ -1,9 +1,9 @@
 package BL2.common;
 
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.StringTranslate;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.StringTranslate;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public final class CreativeTabBL2 extends CreativeTabs
 {

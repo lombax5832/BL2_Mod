@@ -2,11 +2,11 @@ package BL2.common;
 
 import java.util.List;
 
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.NBTTagCompound;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemBullets extends Item
 {
@@ -47,5 +47,10 @@ public class ItemBullets extends Item
     public String getTextureFile()
     {
         return "/BL2/textures/Items.png";
+    }
+    
+    public boolean isFull3D()
+    {
+        return true;
     }
 }

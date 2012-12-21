@@ -4,12 +4,12 @@ import java.util.List;
 
 import BL2.common.ItemGun.GunAtributes;
 
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.World;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class ItemBandoiler extends Item
 {
@@ -121,6 +121,11 @@ public class ItemBandoiler extends Item
 		}
 		stor.save(par1ItemStack);
         return par1ItemStack;
+    }
+	
+	public boolean isFull3D()
+    {
+        return true;
     }
 
 	public static final int[] maxbullets = new int[]{0, 400, 400, 320, 24, 100, 100};

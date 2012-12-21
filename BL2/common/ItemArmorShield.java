@@ -8,15 +8,15 @@ import org.lwjgl.util.vector.Vector;
 import BL2.common.ItemGun.GunAtributes;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import net.minecraft.src.DamageSource;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityPlayerMP;
-import net.minecraft.src.EnumArmorMaterial;
-import net.minecraft.src.ItemArmor;
-import net.minecraft.src.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumArmorMaterial;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.NBTTagCompound;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ISpecialArmor;
 
 public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTickListener
@@ -143,6 +143,10 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		default:
 			return 0;
 		}
+	}
+	
+	public boolean isFull3D(){
+		return true;
 	}
 
 	@Override

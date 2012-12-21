@@ -2,8 +2,12 @@ package BL2.common;
 
 import java.awt.Color;
 
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import BL2.common.ItemArmorShield.Vector;
-import net.minecraft.src.*;
 
 public class ShieldFX extends EntityFX
 {

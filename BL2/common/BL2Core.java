@@ -1,27 +1,21 @@
 package BL2.common;
 
 import java.util.EnumSet;
-import vazkii.codebase.common.CommonUtils;
-import net.minecraft.src.BaseMod;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.KeyBinding;
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import BL2.client.NetworkHandlerClient;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
-import BL2.client.NetworkHandlerClient;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = "BL2", name = "Borderlands 2", version = "0.6(1.4.5)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, 
@@ -55,7 +49,7 @@ public class BL2Core implements ITickHandler
     	proxy.registerKeyBinding();
     	proxy.registerRenderInformation();
     	
-    	EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
+    	//EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
         
         guns = new ItemGun(16000);
         bullets = new ItemBullets(16001);

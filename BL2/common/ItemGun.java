@@ -2,18 +2,13 @@ package BL2.common;
 
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.input.Keyboard;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Side;
-
-import BL2.common.ItemBandoiler.BandStor;
-
-import net.minecraft.src.*;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.ArrowLooseEvent;
-import net.minecraftforge.event.entity.player.ArrowNockEvent;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class ItemGun extends Item
 {
@@ -71,6 +66,11 @@ public class ItemGun extends Item
 			ifS = "s";
 		}
     	return ifS;
+    }
+    
+    public boolean isFull3D()
+    {
+        return true;
     }
     
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)

@@ -1,11 +1,21 @@
 package BL2.common;
 
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.src.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 
 
@@ -246,7 +256,7 @@ public class EntityBullet extends Entity implements IProjectile
                     if (var4.entityHit instanceof EntityLiving)
                     {
                     	 EntityLiving var26 = (EntityLiving)var4.entityHit;
-                         var26.func_85034_r(var26.func_85035_bI() + 1);
+                         var26.setArrowCountInEntity(var26.getArrowCountInEntity() + 1);
 
                         if (this.knockbackStrength > 0)
                         {

@@ -12,17 +12,17 @@ import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityPlayerMP;
-import net.minecraft.src.INetworkManager;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.Packet250CustomPayload;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldClient;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.WorldClient;
 import BL2.common.NetworkHandler;
 import BL2.common.ShieldFX;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -74,13 +74,21 @@ public class NetworkHandlerClient extends NetworkHandler
 
         try
         {
-        	//DataInputStream din = new DataInputStream(in);
+
+        	if(packet.data.length < 1)
+        	{
+        		
+        		System.out.println("No packets");
+        		
+        	}
+        	
             switch (packet.data[0])
             {
                 case NetworkHandler.particlePacketID:
                 {
                 	//System.out.println("spawned");
                 	DataInputStream din = new DataInputStream(in);
+                	byte dummy = din.readByte();
                 	int dimension = din.readInt();
                 	int index = din.readInt();
                     double x = din.readDouble();
