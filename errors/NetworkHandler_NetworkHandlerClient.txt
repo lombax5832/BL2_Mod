@@ -1,0 +1,79 @@
+//Network Handler Client
+public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p)
+    {
+		//System.out.println("recieved packet");
+        ByteArrayInputStream in = new ByteArrayInputStream(packet.data, 1, packet.data.length - 1);
+
+        try
+        {
+        	//DataInputStream din = new DataInputStream(in);
+            switch (packet.data[0])
+            {
+                case NetworkHandler.particlePacketID:
+                {
+                	//System.out.println("spawned");
+                	DataInputStream din = new DataInputStream(in);
+                	int dimension = din.readInt();
+                	int index = din.readInt();
+                    double x = din.readDouble();
+                    double y = din.readDouble();
+                    double z = din.readDouble();
+                    int playerId = din.readInt();
+                    //String username = din.readUTF();
+
+                    WorldClient world = Minecraft.getMinecraft().theWorld;
+
+                    EntityPlayer player = (EntityPlayer) world.getEntityByID(playerId);
+                    
+                    if (world.provider.dimensionId != dimension)
+                    {
+                        return;
+                    }
+                    
+                    
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+//NetworkHandler
+public void sendParticlePacket(World world, double x, double y, double z, EntityPlayer player, int inventoryIndex)
+	{
+		try
+        {
+			ByteArrayOutputStream baout = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baout);
+            out.writeByte(0);
+            out.writeInt(world.provider.dimensionId);
+            out.writeInt(inventoryIndex);
+            out.writeDouble(x);
+            out.writeDouble(y);
+            out.writeDouble(z);
+            out.writeInt(player.entityId);
+            out.close();
+            Packet250CustomPayload packet = new Packet250CustomPayload();
+            packet.channel = "bl2";
+            packet.isChunkDataPacket = false;
+            packet.data = baout.toByteArray();
+            packet.length = baout.size();
+            Iterator<EntityPlayer> players = world.playerEntities.iterator();
+
+            while (players.hasNext())
+            {
+                EntityPlayer otherplayer = players.next();
+                
+                if (otherplayer.getDistanceSqToEntity(player) < 256.0D)
+                {
+                    PacketDispatcher.sendPacketToPlayer(packet, (Player)otherplayer);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+        	ex.printStackTrace();
+        }
+	}
