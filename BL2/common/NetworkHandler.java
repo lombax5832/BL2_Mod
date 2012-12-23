@@ -20,7 +20,7 @@ public class NetworkHandler implements IPacketHandler
 	public static final int particlePacketID = 0;
 	public static final int reloadPacketID = 1;
 	
-	public void sendParticlePacket(World world, double x, double y, double z, EntityPlayer player, int inventoryIndex)
+	public void sendParticlePacket(World world, double x, double y, double z, double px, double py, double pz, int inventoryIndex)
 	{
 		try
         {
@@ -32,7 +32,9 @@ public class NetworkHandler implements IPacketHandler
             out.writeDouble(x);
             out.writeDouble(y);
             out.writeDouble(z);
-            out.writeInt(player.entityId);
+            out.writeDouble(px);
+            out.writeDouble(py);
+            out.writeDouble(pz);
             out.close();
             Packet250CustomPayload packet = new Packet250CustomPayload();
             packet.channel = "bl2";
@@ -43,12 +45,12 @@ public class NetworkHandler implements IPacketHandler
 
             while (players.hasNext())
             {
-                EntityPlayer otherplayer = players.next();
+                EntityPlayer player = players.next();
                 
-                if (otherplayer.getDistanceSqToEntity(player) < 256.0D)
+                if (player.getDistanceSq(px + x, py + y, pz + z) < 256.0D)
                 {
-                	//System.out.println("added for");
-                    PacketDispatcher.sendPacketToPlayer(packet, (Player)otherplayer);
+                	System.out.println("added for");
+                    PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
                 }
             }
         }

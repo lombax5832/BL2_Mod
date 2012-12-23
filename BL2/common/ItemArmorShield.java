@@ -42,7 +42,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		}
 		
 		par3List.clear();
-		par3List.add("Shield");
+		par3List.add("YOLO");
 		par3List.add("Charge: " + tag.getInteger("charge"));
 	}
 	
@@ -52,6 +52,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		NBTTagCompound tag = it.getTagCompound();
 		if(tag == null)
 		{
+			
 			tag = new NBTTagCompound();
 			it.setTagCompound(tag);
 		}
@@ -79,7 +80,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 				{
 					if(ep.getCurrentArmor(o) == it)
 					{
-						BL2Core.nethandler.sendParticlePacket(ep.worldObj,  v.x * distance, v.y * distance * 2, v.z * distance, ep, o);
+						BL2Core.nethandler.sendParticlePacket(ep.worldObj,  v.x * distance, v.y * distance * 2, v.z * distance, ep.posX, ep.posY, ep.posZ, o);
 					}
 				}
 			}
@@ -116,12 +117,12 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 			{
 				//use energy for one damage
 				absorbed++;
+				tag.setInteger("charge", tag.getInteger("charge") - 10);
 			}
 			tag.setInteger("regenticker", 100);
 			
 			//got hit
-			tag.setInteger("hitticker", 2000);
-			tag.setInteger("charge", tag.getInteger("charge") - 10);
+			tag.setInteger("hitticker", 20);
 			
 			return new ISpecialArmor.ArmorProperties(10, damage / absorbed, Integer.MAX_VALUE);
 		}
@@ -143,10 +144,6 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		default:
 			return 0;
 		}
-	}
-	
-	public boolean isFull3D(){
-		return true;
 	}
 
 	@Override

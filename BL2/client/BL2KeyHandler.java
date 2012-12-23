@@ -2,41 +2,44 @@ package BL2.client;
 
 import java.util.EnumSet;
 
-import org.lwjgl.input.Keyboard;
+import BL2.common.BL2Core;
 
 import net.minecraft.client.settings.KeyBinding;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
 
-public class BL2KeyHandler extends KeyHandler{
+public class BL2KeyHandler extends KeyHandler
+{
+	public static KeyBinding reloadKey = new KeyBinding("Reload", 19);
 
-	public static KeyBinding key = new KeyBinding("Reload Gun", Keyboard.KEY_R);
-	
-	public BL2KeyHandler() {
-		super(new KeyBinding[] { key }, new boolean[] { false });
-	}
-	@Override
-	public String getLabel() {
-		// TODO Auto-generated method stub
-		return "Reload Gun";
+	public BL2KeyHandler() 
+	{
+		super(new KeyBinding[]{reloadKey});
 	}
 
 	@Override
-	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.SERVER);
+	public String getLabel() 
+	{
+		return null;
 	}
+
 	@Override
-	public void keyDown(EnumSet<TickType> types,
-			net.minecraft.client.settings.KeyBinding kb, boolean tickEnd,
-			boolean isRepeat) {
-		// TODO Auto-generated method stub
+	public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat)
+	{
+			System.out.println("r");
+			BL2Core.nethandler.sendReloaderPacket();
+	}
+
+	@Override
+	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) 
+	{
 		
 	}
+
 	@Override
-	public void keyUp(EnumSet<TickType> types,
-			net.minecraft.client.settings.KeyBinding kb, boolean tickEnd) {
-		// TODO Auto-generated method stub
-		
+	public EnumSet<TickType> ticks() 
+	{
+		return EnumSet.of(TickType.CLIENT);
 	}
 
 }

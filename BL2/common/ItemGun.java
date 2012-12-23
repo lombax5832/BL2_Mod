@@ -2,6 +2,8 @@ package BL2.common;
 
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,11 +68,6 @@ public class ItemGun extends Item
 			ifS = "s";
 		}
     	return ifS;
-    }
-    
-    public boolean isFull3D()
-    {
-        return true;
     }
     
     public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
@@ -147,7 +144,7 @@ public class ItemGun extends Item
     }
     
     public boolean noAmmo(GunAtributes atr){
-		if(atr.bulletsleft >= 1){
+		if(atr.bulletsleft <= 1){
 			return true;
 		}
     	return false;
@@ -167,10 +164,19 @@ public class ItemGun extends Item
         atr.save(par1ItemStack);
     }
     
+    public boolean reloading(ItemStack par1ItemStack)
+    {
+    	GunAtributes atr = new GunAtributes(par1ItemStack);
+    	if(atr.reloadticker != atr.reloadtime){
+    		return true;
+    	}
+		return false;
+    }
+    
     public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
     {
         GunAtributes atr = new GunAtributes(par1ItemStack);
-
+        
         //System.out.println(Keyboard.isKeyDown(19));
         
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
@@ -179,9 +185,9 @@ public class ItemGun extends Item
         {
         	try
         	{
-        		Class.forName("net.minecraft.src.KeyBinding");
+        		Class.forName("net.minecraft.client.settings.KeyBinding");
         		//client
-	        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0 || (BL2KeyHandler.reloadKey.isPressed() && !fullAmmo(atr)))
+	        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0 || (BL2.client.BL2KeyHandler.reloadKey.isPressed() && !fullAmmo(atr)))
 			    {
 					reload(par1ItemStack);
 			        return;
@@ -298,27 +304,28 @@ public class ItemGun extends Item
     public boolean canReload(EntityPlayer player, int type, ItemStack is)
     {
         ItemStack stack = null;
-        
-        for (int i = 0; i < 36; i++)
-        {
-            stack = player.inventory.getStackInSlot(i);
-
-            if (stack != null && stack.getItemDamage() == type)
-            {
-                if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
-                {
-                    ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
-
-                    if(stor.bullets >= 1)
-                    {
-                        return true;
-                    }
-                }
-                else if (stack.itemID == BL2Core.bullets.shiftedIndex)
-                {
-                    return true;
-                }
-            }
+        if(reloading(is) == false){
+	        for (int i = 0; i < 36; i++)
+	        {
+	            stack = player.inventory.getStackInSlot(i);
+	
+	            if (stack != null && stack.getItemDamage() == type)
+	            {
+	                if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
+	                {
+	                    ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
+	
+	                    if(stor.bullets >= 1)
+	                    {
+	                        return true;
+	                    }
+	                }
+	                else if (stack.itemID == BL2Core.bullets.shiftedIndex)
+	                {
+	                    return true;
+	                }
+	            }
+	        }
         }
 
         return false;

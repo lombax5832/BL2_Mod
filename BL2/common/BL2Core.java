@@ -49,7 +49,7 @@ public class BL2Core implements ITickHandler
     	proxy.registerKeyBinding();
     	proxy.registerRenderInformation();
     	
-    	//EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
+    	EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
         
         guns = new ItemGun(16000);
         bullets = new ItemBullets(16001);

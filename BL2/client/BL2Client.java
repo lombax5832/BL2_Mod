@@ -22,6 +22,6 @@ public class BL2Client extends BL2Proxy{
 
 	public void registerKeyBinding()
 	{
-		KeyBindingRegistry.registerKeyBinding(new BL2KeyHandler());
+		KeyBindingRegistry.registerKeyBinding(new BL2.client.BL2KeyHandler());
 	}
 }
