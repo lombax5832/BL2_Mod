@@ -78,7 +78,13 @@ public class ItemGun extends Item
     	par3List.add(gunNames[par1ItemStack.getItemDamage()]);
     	par3List.add(Companies[atr.Company]);
     	par3List.add("DPS: " + getDPS(par1ItemStack) + " Hearts/second");
-    	par3List.add("Damage: " + damage/2 + " Hearts");
+    	if(atr.pellets == 1){
+    		par3List.add("Damage: " + damage/2 + " Hearts");
+    	}
+    	else{
+    		par3List.add("Damage: " + damage/2 + " x" + atr.pellets + " Hearts");
+    		par3List.add("Damage Per Shot: " + (damage/2) * atr.pellets + " Hearts");
+    	}
 		par3List.add("Ammo: " + getBulletsLeftInfo(par1ItemStack));
 		par3List.add("Consumes " + atr.ammoPerShot + " bullet"+s(atr.ammoPerShot)+" per shot.");
 		par3List.add("Reload: " + (float) (atr.reloadtime / 20) + " seconds");
@@ -101,8 +107,9 @@ public class ItemGun extends Item
     public float getDPS(ItemStack par1ItemStack){
     	GunAtributes atr = new GunAtributes(par1ItemStack);
     	float damage = (float)atr.damage/2;
+    	int pellets = (int)atr.pellets;
     	float firetime = (float) atr.firetime;
-    	float DPS = (float)((damage)*(20/firetime));
+    	float DPS = (float)((damage * pellets)*(20/firetime));
     	float RDPS = (float) ((double)Math.round(DPS * 100) / 100);
     	
 		return RDPS;
@@ -167,7 +174,7 @@ public class ItemGun extends Item
     public boolean reloading(ItemStack par1ItemStack)
     {
     	GunAtributes atr = new GunAtributes(par1ItemStack);
-    	if(atr.reloadticker != atr.reloadtime){
+    	if(atr.reloadticker <= atr.reloadtime && atr.reloadticker != 0){
     		return true;
     	}
 		return false;
@@ -178,7 +185,7 @@ public class ItemGun extends Item
         GunAtributes atr = new GunAtributes(par1ItemStack);
         
         //System.out.println(Keyboard.isKeyDown(19));
-        
+    	//System.out.println(atr.explosivepower);
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
         //System.out.println(canReload(((EntityPlayer)par3Entity), ((EntityPlayer)par3Entity).getCurrentEquippedItem().getItemDamage(), par1ItemStack) == true);
         if(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack)
@@ -187,7 +194,8 @@ public class ItemGun extends Item
         	{
         		Class.forName("net.minecraft.client.settings.KeyBinding");
         		//client
-	        	if (atr.bulletsleft <= atr.ammoPerShot && atr.reloadticker == 0 || (BL2.client.BL2KeyHandler.reloadKey.isPressed() && !fullAmmo(atr)))
+        		//System.out.println(BL2.client.BL2KeyHandler.reloadKey.pressed);
+	        	if ((atr.bulletsleft <= 1 && atr.reloadticker == 0) || (BL2.client.BL2KeyHandler.reloadKey.pressed && !fullAmmo(atr)))
 			    {
 					reload(par1ItemStack);
 			        return;
@@ -234,7 +242,7 @@ public class ItemGun extends Item
 
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
         
-        if (atr.using && (System.currentTimeMillis() - atr.lasttick) < 250 && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack)
+        if (this.reloading(par1ItemStack) == false && atr.using && (System.currentTimeMillis() - atr.lasttick) < 250 && par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack)
         {
             if (atr.reloadticker > 0)
             {
@@ -259,20 +267,25 @@ public class ItemGun extends Item
             	atr.fireticker = 0;
             	atr.bulletsleft -= atr.ammoPerShot;
             	
+            	for(int i=0;i < atr.pellets; i++){
             	
-            
-                EntityBullet var8 = new EntityBullet(par2World, ((EntityPlayer)par3Entity), atr.bulletspeed, atr.damage, atr.explosive, atr.explosivepower, atr.accuracy, atr.knockback);
-                par3Entity.rotationPitch -= atr.recoil * .75F;
-
-                //par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 0.5F);
-
-               if (!par2World.isRemote)
-                {
-                    par2World.spawnEntityInWorld(var8);
-                }
+	                EntityBullet var8 = new EntityBullet(par2World, ((EntityPlayer)par3Entity), atr.bulletspeed, atr.damage, atr.explosive, atr.explosivepower, atr.accuracy, atr.knockback);
+	                
+	
+	                //par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 0.5F);
+	               if (!par2World.isRemote)
+	               {
+	                    par2World.spawnEntityInWorld(var8);
+	               }
+               
+            	}
+            	par3Entity.rotationPitch -= atr.recoil * .75F;
             }
 
             atr.save(par1ItemStack);
+        }else{
+        	atr.fireticker = atr.firetime - 1;
+        	atr.save(par1ItemStack);
         }
     }
     
@@ -295,7 +308,7 @@ public class ItemGun extends Item
     public boolean consumeBullet(EntityPlayer player, GunAtributes atr, ItemStack is)
     {
         ItemStack stack = null;
-        if (atr.bulletsleft > 0){
+        if (atr.bulletsleft > 1){
             return true;
         }
 		return false;
@@ -304,28 +317,27 @@ public class ItemGun extends Item
     public boolean canReload(EntityPlayer player, int type, ItemStack is)
     {
         ItemStack stack = null;
-        if(reloading(is) == false){
-	        for (int i = 0; i < 36; i++)
-	        {
-	            stack = player.inventory.getStackInSlot(i);
-	
-	            if (stack != null && stack.getItemDamage() == type)
-	            {
-	                if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
-	                {
-	                    ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
-	
-	                    if(stor.bullets >= 1)
-	                    {
-	                        return true;
-	                    }
-	                }
-	                else if (stack.itemID == BL2Core.bullets.shiftedIndex)
-	                {
-	                    return true;
-	                }
-	            }
-	        }
+        
+        for (int i = 0; i < 36; i++)
+        {
+            stack = player.inventory.getStackInSlot(i);
+
+            if (stack != null && stack.getItemDamage() == type)
+            {
+                if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
+                {
+                    ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
+
+                    if(stor.bullets >= 1)
+                    {
+                        return true;
+                    }
+                }
+                else if (stack.itemID == BL2Core.bullets.shiftedIndex)
+                {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -415,7 +427,7 @@ public class ItemGun extends Item
         return false;
     }
     */
-
+    
     public String getTextureFile()
     {
         return "/BL2/textures/Items.png";
@@ -513,10 +525,12 @@ public class ItemGun extends Item
 		atr.guntype = 6;
 		atr.ammotype = atr.guntype;
 		atr.knockback *= 8;
-		atr.pellets = 5;
+		atr.damage *= 1;
+		atr.pellets  = (int) ((Math.random() * (10 - 5)) + 5);
+		atr.firetime = (int) ((Math.random() * (15 - 10)) + 10);
 		atr.clipsize *= .25;
 		atr.recoil *= 3;
-		atr.accuracy *= 4;
+		atr.accuracy *= .4;
 	}
 
     public static ItemStack getRandomGun()
@@ -594,7 +608,7 @@ public class ItemGun extends Item
          		genRocketLauncher(atr);
          	}
          	
-        	atr.explosive = true;
+        	//atr.explosive = true;
         	atr.throwtoreload = true;
         }
         if(atr.Company == 2)
@@ -716,7 +730,7 @@ public class ItemGun extends Item
          */
         public int firetime = 2;
         public boolean explosive = false;
-        public float explosivepower = 2.0F;
+        public float explosivepower = 1.0F;
         public int clipsize = 31 + 1;
         public int ammoPerShot = 1;
         public int Company = 0; //Dahl = 0, Tediore = 1, Jakobs = 2, Maliwan = 3, Bandit = 4, Hyerion = 5, Vladof = 6, Torgue = 7
@@ -731,7 +745,7 @@ public class ItemGun extends Item
         public int fireticker;
         public int bulletsleft;
         public int reloadticker = 1;
-        public int pellets;
+        public int pellets = 1;
         public int knockback;
         
         public boolean using;

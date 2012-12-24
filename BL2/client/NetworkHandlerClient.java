@@ -61,7 +61,7 @@ public class NetworkHandlerClient extends NetworkHandler
 		
 		 EntityPlayer player = null;
 		
-		System.out.println("recieved packet");
+		//System.out.println("recieved packet");
         ByteArrayInputStream in = new ByteArrayInputStream(packet.data, 1, packet.data.length - 1);
 
         try
@@ -71,7 +71,7 @@ public class NetworkHandlerClient extends NetworkHandler
             {
                 case NetworkHandler.particlePacketID:
                 {
-                	System.out.println("spawned");
+                	//System.out.println("spawned");
                 	DataInputStream din = new DataInputStream(in);
                 	int dimention = din.readInt();
                 	int index = din.readInt();

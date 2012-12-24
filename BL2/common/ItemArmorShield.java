@@ -9,6 +9,7 @@ import BL2.common.ItemGun.GunAtributes;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.util.DamageSource;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,11 +18,12 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.IArmorTextureProvider;
 import net.minecraftforge.common.ISpecialArmor;
 
-public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTickListener
+public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTickListener, IArmorTextureProvider
 {
-	public static final int maxcharge = 200;
+	boolean isHit = false;
 
 	public ItemArmorShield(int id, int renderindex, int armortype) 
 	{
@@ -32,47 +34,65 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
         this.setMaxDamage(100);
 	}
 	
+	public boolean getHit(ShieldAtributes atr, double damage){
+        int dmg = (int) damage;
+        atr.absorbed = 0;
+        if(atr.canHit = true && atr.lastHit >= 5  && atr.charge >= 5)
+        {
+        	for(int i = 0; i < dmg; i++)
+			{
+        		atr.absorbed++;
+	        	atr.lastHit = 0;
+	        	atr.charge = atr.charge - (5);
+	        	if(atr.charge < 5){
+	        		break;
+	        	}
+			}
+        	atr.canHit = false;
+        	return true;
+        }
+        return false;
+	}
+	
+	public boolean charging = false;
+	
+	public void getSubItems(int i, CreativeTabs tabs, List l)
+    {
+		ItemStack stack = new ItemStack(this);
+        ShieldAtributes atr = new ShieldAtributes(stack);
+        atr.rechargeTicker = 1;
+        l.add(stack);
+        atr.save(stack);
+    }
+	
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		NBTTagCompound tag = par1ItemStack.getTagCompound();
-		if(tag == null)
-		{
-			tag = new NBTTagCompound();
-			par1ItemStack.setTagCompound(tag);
-		}
+		ShieldAtributes atr = new ShieldAtributes(par1ItemStack);
 		
 		par3List.clear();
-		par3List.add("YOLO");
-		par3List.add("Charge: " + tag.getInteger("charge"));
+		par3List.add("Shield");
+		par3List.add("Charge: " + atr.charge);
 	}
 	
 	public float getDamageForItemStack(ItemStack it)
     {
-		System.out.println("yes");
-		NBTTagCompound tag = it.getTagCompound();
-		if(tag == null)
-		{
-			
-			tag = new NBTTagCompound();
-			it.setTagCompound(tag);
-		}
-    	return tag.getInteger("charge") / maxcharge;
+		//System.out.println("yes");
+		ShieldAtributes atr = new ShieldAtributes(it);
+    	return atr.charge / atr.maxcharge;
     }
 
 	@Override
 	public boolean onTick(EntityPlayer ep, ItemStack it) 
 	{
-		NBTTagCompound tag = it.getTagCompound();
-		if(tag == null)
+		ShieldAtributes atr = new ShieldAtributes(it);
+		//System.out.println(atr.canHit);
+		//System.out.println(atr.rechargeDelay);
+		//System.out.println((float)atr.charge/atr.maxcharge);
+		if(atr.hitTicker > 0 || this.charging == true)
 		{
-			tag = new NBTTagCompound();
-			it.setTagCompound(tag);
-		}
-		if(tag.getInteger("hitticker") > 0)
-		{
-			tag.setInteger("hitticker", tag.getInteger("hitticker") - 1);
+			atr.hitTicker--;
 			double distance = .75;//radius of particle circle
-			for(int i = 0; i < 3; i++)//particles per tick
+			for(int i = 0; i < 10; i++)//particles per tick
 			{
 				Vector v = new Vector((Math.random() * 2) - 1, (Math.random() * 2) - 1, (Math.random() * 2) - 1);
 				v.normalize();
@@ -85,48 +105,67 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 				}
 			}
 		}
-		if(tag.getInteger("regenticker") > 0)
-		{
-			tag.setInteger("regenticker", tag.getInteger("regenticker") - 1);
+		if(atr.lastHit >= 0 && atr.lastHit < 5){
+			atr.lastHit++;
+			atr.save(it);
 		}
-		else if(tag.getInteger("charge") < maxcharge)
-		{
-			tag.setInteger("charge", tag.getInteger("charge") + 1);
+		if(atr.lastHit >= 5 && atr.canHit == false){
+			atr.canHit = true;
+			atr.save(it);
 		}
-		else if(tag.getInteger("charge") >= maxcharge)
+		if(atr.rechargeTicker > 0)
 		{
-			tag.setInteger("charge", maxcharge);
+			atr.rechargeTicker--;
+			atr.save(it);
+		}
+		if((atr.rechargeTicker == 0) && (atr.charge < atr.maxcharge))
+		{
+			this.charging = true;
+			atr.charge++;
+			atr.save(it);
+		}
+		else if(atr.charge >= atr.maxcharge)
+		{
+			this.charging = false;
+			atr.charge = atr.maxcharge;
+			atr.save(it);
 		}
 		return false;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public ArmorProperties getProperties(EntityLiving player, ItemStack armor, DamageSource source, double damage, int slot) 
 	{
-		if(true)//shield activated
-		{
+		//if(true)//shield activated
+		//{
+			
 			double absorbed = 0;
-			NBTTagCompound tag = armor.getTagCompound();
-			if(tag == null)
-			{
-				tag = new NBTTagCompound();
-				armor.setTagCompound(tag);
+			ShieldAtributes atr = new ShieldAtributes(armor);
+			int prevCharge = atr.charge;
+			if(atr.charge > 0){
+				atr.hitTicker = 20;
 			}
-			while(tag.getInteger("charge") >= 10)//can take more of the damage
+			if(atr.charge > 0)//can take more of the damage
 			{
 				//use energy for one damage
-				absorbed++;
-				tag.setInteger("charge", tag.getInteger("charge") - 10);
+				//atr.charge = atr.charge - 10;
+				getHit(atr, damage);
 			}
-			tag.setInteger("regenticker", 100);
+			atr.rechargeTicker = atr.rechargeDelay;
 			
 			//got hit
-			tag.setInteger("hitticker", 20);
 			
-			return new ISpecialArmor.ArmorProperties(10, damage / absorbed, Integer.MAX_VALUE);
-		}
-		return new ISpecialArmor.ArmorProperties(0, getBaseAbsorptionRatio(), 0);
+			//getHit(armor);
+			
+			atr.save(armor);
+			if(prevCharge > 0){
+				return new ISpecialArmor.ArmorProperties(10, atr.absorbed/damage, Integer.MAX_VALUE);
+			}else
+			{
+				return new ISpecialArmor.ArmorProperties(0, getBaseAbsorptionRatio(), 0);
+			}
+		//}
+		//return new ISpecialArmor.ArmorProperties(0, getBaseAbsorptionRatio(), 0);
 	}
 	
 	private double getBaseAbsorptionRatio()
@@ -134,13 +173,13 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		switch(this.armorType)
 		{
 		case 0:
-			return .15;
+			return 0;
 		case 1:
-			return .4;
+			return 1;
 		case 2:
-			return .3;
+			return 0;
 		case 3:
-			return .15;
+			return 0;
 		default:
 			return 0;
 		}
@@ -148,7 +187,10 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 
 	@Override
 	public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-		return 0;
+		ShieldAtributes atr = new ShieldAtributes(armor);
+		int display = (int) (((float)atr.charge/atr.maxcharge) * 20);
+		//System.out.println("Armor: "+ display);
+		return display;
 	}
 
 	@Override
@@ -156,6 +198,69 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 			DamageSource source, int damage, int slot) {
 		
 	}
+	
+	public static class ShieldAtributes
+    {
+        /**
+         * number of ticks between fires, should be >0
+         */
+		public int maxcharge = 200;
+        public int charge;
+        public int rechargeDelay = 100;
+        public int rechargeTicker;
+        public int rechargeRate;
+        public int hitTicker;
+        public int lastHit;
+        public int absorbed;
+        public boolean canHit = true;
+
+        public ShieldAtributes(ItemStack it)
+        {
+            load(it);
+        }
+
+        public void save(ItemStack it)
+        {
+	    boolean newTag = false;
+            NBTTagCompound tag = it.getTagCompound();
+            if(tag == null) {
+            	tag = new NBTTagCompound();
+            	newTag = true;
+            }
+            
+            tag.setInteger("maxcharge", maxcharge);
+            tag.setInteger("charge", charge);
+            tag.setInteger("rechargeDelay", rechargeDelay);
+            tag.setInteger("rechargeTicker", rechargeTicker);
+            tag.setInteger("rechargeRate", rechargeRate);
+            tag.setInteger("hitTicker", hitTicker);
+            tag.setInteger("lastHit", lastHit);
+            tag.setInteger("absorbed", absorbed);
+            tag.setBoolean("canHit", canHit);
+		    if(newTag)
+	            	it.setTagCompound(tag);
+	        }
+
+        public void load(ItemStack it)
+        {
+            NBTTagCompound tag = it.getTagCompound();
+
+            if (tag == null)
+            {
+                return;
+            }
+
+            maxcharge = tag.getInteger("maxcharge");
+            charge = tag.getInteger("charge");
+            rechargeDelay = tag.getInteger("rechargeDelay");
+            rechargeTicker = tag.getInteger("rechargeTicker");
+            rechargeRate = tag.getInteger("rechargeRate");
+            hitTicker = tag.getInteger("hitTicker");
+            lastHit = tag.getInteger("lastHit");
+            absorbed = tag.getInteger("absorbed");
+            canHit = tag.getBoolean("canHit");
+        }
+    }
 	
 	public static class Vector
 	{
@@ -182,5 +287,18 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		{
 			return Math.sqrt((x * x) + (y * y) + (z * z));
 		}
+	}
+	
+	public String getTextureFile()
+    {
+        return "/BL2/textures/Items.png";
+    }
+
+	@Override
+	public String getArmorTextureFile(ItemStack itemstack) {
+		if (itemstack.itemID == BL2Core.shield.shiftedIndex){
+			return "/BL2/textures/Armor/shield_1.png";
+		}
+		return null;
 	}
 }

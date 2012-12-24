@@ -17,7 +17,7 @@ public class BL2Client extends BL2Proxy{
             MinecraftForgeClient.preloadTexture("/BL2/textures/Items.png");
             MinecraftForgeClient.preloadTexture("/BL2/textures/bullet.png");
             RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, new RenderBullet());
-            BL2Core.shieldrenderid = RenderingRegistry.addNewArmourRendererPrefix("bl2/");
+            BL2Core.shieldrenderid = RenderingRegistry.addNewArmourRendererPrefix("BL2/textures");
     }
 
 	public void registerKeyBinding()

@@ -49,7 +49,7 @@ public class NetworkHandler implements IPacketHandler
                 
                 if (player.getDistanceSq(px + x, py + y, pz + z) < 256.0D)
                 {
-                	System.out.println("added for");
+                	//System.out.println("added for");
                     PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
                 }
             }

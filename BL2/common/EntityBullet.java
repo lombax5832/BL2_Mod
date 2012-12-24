@@ -13,6 +13,7 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -256,7 +257,7 @@ public class EntityBullet extends Entity implements IProjectile
                     if (var4.entityHit instanceof EntityLiving)
                     {
                     	 EntityLiving var26 = (EntityLiving)var4.entityHit;
-                         var26.setArrowCountInEntity(var26.getArrowCountInEntity() + 1);
+                         //var26.setArrowCountInEntity(var26.getArrowCountInEntity() + 1);
 
                         if (this.knockbackStrength > 0)
                         {
@@ -271,6 +272,8 @@ public class EntityBullet extends Entity implements IProjectile
                 }
                 else
                 {
+                	int var21 = 1;
+                	this.worldObj.spawnParticle("crit", this.posX + this.motionX * (double)var21 / 4.0D, this.posY + this.motionY * (double)var21 / 4.0D, this.posZ + this.motionZ * (double)var21 / 4.0D, -this.motionX, -this.motionY + 0.2D, -this.motionZ);
                     this.motionX *= -0.10000000149011612D;
                     this.motionY *= -0.10000000149011612D;
                     this.motionZ *= -0.10000000149011612D;
@@ -281,7 +284,7 @@ public class EntityBullet extends Entity implements IProjectile
             }
             if(explosive == true)
             {
-            	CustomExplosion ex = new CustomExplosion(worldObj, this, posX, posY, posZ, explosivepower);
+            	CustomExplosion ex = new CustomExplosion(worldObj, this, this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ, explosivepower);
                 ex.doExplosionA();
                 ex.doExplosionB(true);
             }
