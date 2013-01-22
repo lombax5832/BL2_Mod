@@ -74,17 +74,29 @@ public class ItemGun extends Item
 	 {
     	par3List.clear();
     	GunAtributes atr = new GunAtributes(par1ItemStack);
-    	float damage = atr.damage;
+    	boolean hasAmp = hasAmp(par2EntityPlayer);
+    	int Amp = calcAmp(par2EntityPlayer);
+    	float damage = 0;
+    	if(hasAmp){
+    		damage = atr.damage + Amp;
+    	}else{
+    		damage = atr.damage;
+    	}
     	par3List.add(gunNames[par1ItemStack.getItemDamage()]);
     	par3List.add(Companies[atr.Company]);
-    	par3List.add("DPS: " + getDPS(par1ItemStack) + " Hearts/second");
-    	if(atr.pellets == 1){
-    		par3List.add("Damage: " + damage/2 + " Hearts");
-    	}
-    	else{
-    		par3List.add("Damage: " + damage/2 + " x" + atr.pellets + " Hearts");
-    		par3List.add("Damage Per Shot: " + (damage/2) * atr.pellets + " Hearts");
-    	}
+    	calcDmg(atr, hasAmp, Amp, par3List);
+//    	par3List.add(calcDmg(atr, hasAmp, Amp));
+//    	if(atr.pellets == 1){
+//    		par3List.add("Damage: " + atr.damage/2 + " Hearts");
+//    		if(hasAmp){
+//    			par3List.add("Amp Damage: " + Amp/2 + " Hearts");
+//        	}
+//    	}
+//    	else{
+//    		par3List.add("Damage: " + damage/2 + " x" + atr.pellets + " Hearts");
+//    		par3List.add("Damage Per Shot: " + (damage/2) * atr.pellets + " Hearts");
+//    	}
+    	par3List.add("DPS: " + getDPS(par1ItemStack, par2EntityPlayer) + " Hearts/second");
 		par3List.add("Ammo: " + getBulletsLeftInfo(par1ItemStack));
 		par3List.add("Consumes " + atr.ammoPerShot + " bullet"+s(atr.ammoPerShot)+" per shot.");
 		par3List.add("Reload: " + (float) (atr.reloadtime / 20) + " seconds");
@@ -92,6 +104,42 @@ public class ItemGun extends Item
 			par3List.add("Bullets explode on impact.");
 		}
 	 }
+    
+    public void calcDmg(GunAtributes atr, boolean hasAmp, int Amp, List list){
+    	String Damage = "Damage: ";
+    	int damage = atr.damage/2;
+    	Amp /= 2;
+    	if(hasAmp){
+    		Damage = Damage + "(" +damage;
+    	}else{
+    		Damage = Damage + damage;
+    	}
+    	if(hasAmp){
+    		Damage = Damage + " + " + Amp + ")";
+    	}
+    	if(atr.pellets > 1){
+    		Damage = Damage + "x" + atr.pellets + " ";
+    	}
+    	
+    	list.add(Damage);
+    	
+    	if(hasAmp || atr.pellets > 1){
+    		String dmgShot = "Damage Per Shot: ";
+    		int dmg = 0;
+    		
+			if(hasAmp && atr.pellets > 1){
+    			dmg = (damage + Amp) * atr.pellets;
+			}else if(hasAmp){
+				dmg = damage + Amp;
+			}else if(atr.pellets > 1){
+				dmg = damage * atr.pellets;
+			}
+			
+			list.add(dmgShot + dmg);
+    	}
+    	
+    	
+    }
 
     public int getBulletsLeft(ItemStack par1ItemStack){
     	int Bulletsleft = new GunAtributes(par1ItemStack).bulletsleft - 1;
@@ -104,12 +152,12 @@ public class ItemGun extends Item
     	}
     }
     
-    public float getDPS(ItemStack par1ItemStack){
+    public float getDPS(ItemStack par1ItemStack, EntityPlayer player){
     	GunAtributes atr = new GunAtributes(par1ItemStack);
     	float damage = (float)atr.damage/2;
     	int pellets = (int)atr.pellets;
     	float firetime = (float) atr.firetime;
-    	float DPS = (float)((damage * pellets)*(20/firetime));
+    	float DPS = (float)((damage + calcAmp(player) * pellets)*(20/firetime));
     	float RDPS = (float) ((double)Math.round(DPS * 100) / 100);
     	
 		return RDPS;
@@ -184,6 +232,7 @@ public class ItemGun extends Item
     {
         GunAtributes atr = new GunAtributes(par1ItemStack);
         
+        //System.out.println(hasAmp((EntityPlayer) par3Entity));
         //System.out.println(Keyboard.isKeyDown(19));
     	//System.out.println(atr.explosivepower);
         //System.out.println(par3Entity instanceof EntityPlayer && ((EntityPlayer)par3Entity).getHeldItem() == par1ItemStack);
@@ -269,7 +318,8 @@ public class ItemGun extends Item
             	
             	for(int i=0;i < atr.pellets; i++){
             	
-	                EntityBullet var8 = new EntityBullet(par2World, ((EntityPlayer)par3Entity), atr.bulletspeed, atr.damage, atr.explosive, atr.explosivepower, atr.accuracy, atr.knockback);
+            		int ampDmg = calcAmp((EntityPlayer)par3Entity);
+	                EntityBullet var8 = new EntityBullet(par2World, ((EntityPlayer)par3Entity), atr.bulletspeed, atr.damage + ampDmg, atr.explosive, atr.explosivepower, atr.accuracy, atr.knockback);
 	                
 	
 	                //par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + 0.5F);
@@ -341,6 +391,52 @@ public class ItemGun extends Item
         }
 
         return false;
+    }
+    
+    public boolean hasAmp(EntityPlayer player)
+    {
+        ItemStack stack = null;
+        
+        for (int i = 0; i < 4; i++)
+        {
+            stack = player.inventory.armorItemInSlot(i);
+
+            if (stack != null && stack.getItemDamage() == 5)
+            {
+                if (stack.itemID == BL2Core.shield.shiftedIndex)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    public int calcAmp(EntityPlayer player)
+    {
+        ItemStack stack = null;
+        
+        for (int i = 0; i < 4; i++)
+        {
+            stack = player.inventory.armorItemInSlot(i);
+
+            if (stack != null && stack.getItemDamage() == 5)
+            {
+                if (stack.itemID == BL2Core.shield.shiftedIndex)
+                {
+                    ItemArmorShield.ShieldAtributes str = new ItemArmorShield.ShieldAtributes(stack);
+
+                    if(str.charge == str.maxcharge){
+                    	return str.amp;
+                    }else{
+                    	return 0;
+                    }
+                }
+            }
+        }
+
+        return 0;
     }
     
     public boolean reload(EntityPlayer player, int type, ItemStack is)
@@ -520,6 +616,7 @@ public class ItemGun extends Item
     	atr.accuracy = 1000F;
     	atr.firetime *= 5;
     }
+    
 	public static void genShotgun(GunAtributes atr)
 	{
 		atr.guntype = 6;
@@ -712,7 +809,7 @@ public class ItemGun extends Item
         {
         	genAny(atr);
         	atr.explosive = true;
-        	atr.bulletspeed *= .5;
+        	atr.bulletspeed *= .1;
         }
         
 //        System.out.println("comp:" + atr.Company);

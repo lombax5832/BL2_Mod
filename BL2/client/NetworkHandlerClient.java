@@ -56,6 +56,32 @@ public class NetworkHandlerClient extends NetworkHandler
         }
 	}
 	
+	public Color getColor(int type){
+		switch(type){
+			case 1:
+			{
+				return Color.CYAN;
+			}
+			case 2:
+			{
+				return Color.RED;
+			}
+			case 3:
+			{
+				return Color.GREEN;
+			}
+			case 4:
+			{
+				return Color.MAGENTA;
+			}
+			case 5:
+			{
+				return Color.YELLOW;
+			}
+		}
+		return Color.WHITE;
+	}
+	
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p)
     {
 		
@@ -78,9 +104,8 @@ public class NetworkHandlerClient extends NetworkHandler
                     double x = din.readDouble();
                     double y = din.readDouble();
                     double z = din.readDouble();
-                    double px = din.readDouble();
-                    double py = din.readDouble();
-                    double pz = din.readDouble();
+                    int playerID = din.readInt();
+                    int type = din.readInt();
                     WorldClient world = Minecraft.getMinecraft().theWorld;
 
                     if (world.provider.dimensionId != dimention)
@@ -88,18 +113,17 @@ public class NetworkHandlerClient extends NetworkHandler
                         return;
                     }
                     if(player == null){
-                    	player = world.getClosestPlayer(px, py, pz, 16);
+                    	player = (EntityPlayer) world.getEntityByID(playerID);
                     }
                     
                     if(player == p)
                     {
-                    	player = (EntityPlayer)p;
-                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y-1.5, z, Color.CYAN);
+                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y-1.5, z, getColor(type));
                     	ModLoader.getMinecraftInstance().effectRenderer.addEffect(fx);
                     }
                     else
                     {
-                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y, z, Color.CYAN);
+                    	ShieldFX fx = new ShieldFX(world, player, player.getCurrentArmor(index), x, y, z, getColor(type));
                     	ModLoader.getMinecraftInstance().effectRenderer.addEffect(fx);
                     }
                     

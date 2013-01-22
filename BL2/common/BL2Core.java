@@ -2,9 +2,15 @@ package BL2.common;
 
 import java.util.EnumSet;
 
+import vazkii.healthbars.common.HealthBarsHooks;
+
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import BL2.client.NetworkHandlerClient;
+import BL2.client.RenderShield;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -13,11 +19,12 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = "BL2", name = "Borderlands 2", version = "0.8(1.4.6)")
+@Mod(modid = "BL2", name = "Borderlands 2", version = "1.0(1.4.6)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, 
 clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandlerClient.class),
 serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandler.class))
@@ -27,6 +34,7 @@ public class BL2Core implements ITickHandler
     public static Item bullets;
     public static Item bandoiler;
     public static Item shield;
+    public static Item grenade;
     public static Item temp;
     
     public static int shieldrenderid = 0;
@@ -50,15 +58,29 @@ public class BL2Core implements ITickHandler
     	proxy.registerRenderInformation();
     	
     	EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
+    	EntityRegistry.registerModEntity(EntityGrenade.class, "Grenade", 2, this, 64, 10, true);
         
         guns = new ItemGun(16000);
         bullets = new ItemBullets(16001);
         bandoiler = new ItemBandoiler(16002);
         shield = new ItemArmorShield(16003, shieldrenderid, 1).setIconIndex(65);
-        temp = new ItemTemp(16004);
+        grenade = new ItemGrenade(16004);
+        temp = new ItemTemp(16005);
         LanguageRegistry.addName(guns, "Gun");
         //registerHandlers();
         TickRegistry.registerTickHandler(this, Side.SERVER);
+        proxy.registerRenderTickHandler();
+//        MinecraftForge.EVENT_BUS.register(new RenderShield());
+        
+        GameRegistry.addRecipe(new ItemStack(temp), new Object[]
+        		{
+        	"IWI",
+        	"WGW",
+        	"IWI",
+        	'I', Item.ingotIron,
+        	'W', Block.planks,
+        	'G', Item.ingotGold
+        		});
     }
     
     public void tickStart(EnumSet<TickType> var1, Object... var2)

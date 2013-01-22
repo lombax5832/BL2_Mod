@@ -10,6 +10,7 @@ import BL2.common.ItemGun.GunAtributes;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.util.DamageSource;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,6 +24,11 @@ import net.minecraftforge.common.ISpecialArmor;
 
 public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTickListener, IArmorTextureProvider
 {
+	private String itemName;
+	
+	public static final String[] shieldNames = new String[] {"","Standard Shield"	, "Turtle Shield"	, "Booster Shield"	, "Absorption Shield"	, "Amp Shield"};
+	public static final String[] Companies = new String[] {"", 	"Tediore"			, "Pangolin"		, "Dahl"			, "Vladof"				, "Hyperion"};
+	
 	boolean isHit = false;
 
 	public ItemArmorShield(int id, int renderindex, int armortype) 
@@ -41,6 +47,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
         {
         	for(int i = 0; i < dmg; i++)
 			{
+        		atr.charging = false;
         		atr.absorbed++;
 	        	atr.lastHit = 0;
 	        	atr.charge = atr.charge - (5);
@@ -58,11 +65,22 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 	
 	public void getSubItems(int i, CreativeTabs tabs, List l)
     {
-		ItemStack stack = new ItemStack(this);
-        ShieldAtributes atr = new ShieldAtributes(stack);
-        atr.rechargeTicker = 1;
-        l.add(stack);
-        atr.save(stack);
+		for (int j = 1; j < 6; j++)
+        {
+			if(j != 3){
+				ItemStack stack = new ItemStack(this, 1, j);
+		        ShieldAtributes atr = new ShieldAtributes(stack);
+				if(j == 2){
+					atr.maxcharge = 400;
+					atr.rechargeDelay = 200;
+					atr.chargeRate = 3;
+				}
+		        atr.rechargeTicker = 1;
+		        atr.charge = atr.maxcharge;
+		        l.add(stack);
+		        atr.save(stack);
+			}
+        }
     }
 	
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
@@ -70,15 +88,22 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		ShieldAtributes atr = new ShieldAtributes(par1ItemStack);
 		
 		par3List.clear();
-		par3List.add("Shield");
-		par3List.add("Charge: " + atr.charge);
+		par3List.add(shieldNames[par1ItemStack.getItemDamage()]);
+		par3List.add("Charge: " + atr.charge + "/" + atr.maxcharge);
+		par3List.add("Recharge Delay: " + atr.rechargeDelay/20 + " Seconds");
+		par3List.add("Recharge Rate: " + atr.chargeRate*20 +" Per Second");
+		if(par1ItemStack.getItemDamage() == 5){
+			par3List.add("Amp Damage: " + ((float)atr.amp/2) + " Hearts while shield is full");
+		}
 	}
 	
 	public float getDamageForItemStack(ItemStack it)
     {
 		//System.out.println("yes");
 		ShieldAtributes atr = new ShieldAtributes(it);
-    	return atr.charge / atr.maxcharge;
+		float damage = ((float)atr.charge/atr.maxcharge);
+		//System.out.println((float)atr.charge/atr.maxcharge);
+    	return 1 - damage;
     }
 
 	@Override
@@ -88,7 +113,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		//System.out.println(atr.canHit);
 		//System.out.println(atr.rechargeDelay);
 		//System.out.println((float)atr.charge/atr.maxcharge);
-		if(atr.hitTicker > 0 || this.charging == true)
+		if(atr.hitTicker > 0 || atr.charging == true)
 		{
 			atr.hitTicker--;
 			double distance = .75;//radius of particle circle
@@ -100,7 +125,8 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 				{
 					if(ep.getCurrentArmor(o) == it)
 					{
-						BL2Core.nethandler.sendParticlePacket(ep.worldObj,  v.x * distance, v.y * distance * 2, v.z * distance, ep.posX, ep.posY, ep.posZ, o);
+						int playerID = ep.entityId;
+						BL2Core.nethandler.sendParticlePacket(ep.worldObj,  v.x * distance, v.y * distance * 1.5, v.z * distance, playerID, it.getItemDamage(), o);
 					}
 				}
 			}
@@ -120,13 +146,17 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		}
 		if((atr.rechargeTicker == 0) && (atr.charge < atr.maxcharge))
 		{
-			this.charging = true;
-			atr.charge++;
+			atr.charging = true;
+			if(atr.charge + atr.chargeRate <= atr.maxcharge){
+				atr.charge = atr.charge + atr.chargeRate;
+			}else{
+				atr.charge = atr.maxcharge;
+			}
 			atr.save(it);
 		}
 		else if(atr.charge >= atr.maxcharge)
 		{
-			this.charging = false;
+			atr.charging = false;
 			atr.charge = atr.maxcharge;
 			atr.save(it);
 		}
@@ -149,7 +179,17 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 			{
 				//use energy for one damage
 				//atr.charge = atr.charge - 10;
-				getHit(atr, damage);
+				if(armor.getItemDamage() == 4){
+					float g = (float) Math.random() * 100;
+					
+					if(g < 5){
+						
+					}else{
+						getHit(atr, damage);
+					}
+				}else{
+					getHit(atr, damage);
+				}
 			}
 			atr.rechargeTicker = atr.rechargeDelay;
 			
@@ -190,7 +230,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		ShieldAtributes atr = new ShieldAtributes(armor);
 		int display = (int) (((float)atr.charge/atr.maxcharge) * 20);
 		//System.out.println("Armor: "+ display);
-		return display;
+		return 0;
 	}
 
 	@Override
@@ -201,18 +241,19 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 	
 	public static class ShieldAtributes
     {
-        /**
-         * number of ticks between fires, should be >0
-         */
-		public int maxcharge = 200;
+		public int company;
+		public int maxcharge = 50;
         public int charge;
-        public int rechargeDelay = 100;
+        public int chargeRate = 1;
+        public int rechargeDelay = 200;
         public int rechargeTicker;
         public int rechargeRate;
         public int hitTicker;
         public int lastHit;
         public int absorbed;
+        public int amp = 8;
         public boolean canHit = true;
+        public boolean charging = false;
 
         public ShieldAtributes(ItemStack it)
         {
@@ -228,15 +269,19 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
             	newTag = true;
             }
             
+            tag.setInteger("company", company);
             tag.setInteger("maxcharge", maxcharge);
             tag.setInteger("charge", charge);
+            tag.setInteger("chargeRate", chargeRate);
             tag.setInteger("rechargeDelay", rechargeDelay);
             tag.setInteger("rechargeTicker", rechargeTicker);
             tag.setInteger("rechargeRate", rechargeRate);
             tag.setInteger("hitTicker", hitTicker);
             tag.setInteger("lastHit", lastHit);
             tag.setInteger("absorbed", absorbed);
+            tag.setInteger("amp", amp);
             tag.setBoolean("canHit", canHit);
+            tag.setBoolean("charging", charging);
 		    if(newTag)
 	            	it.setTagCompound(tag);
 	        }
@@ -250,15 +295,19 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
                 return;
             }
 
+            company = tag.getInteger("company");
             maxcharge = tag.getInteger("maxcharge");
             charge = tag.getInteger("charge");
+            chargeRate = tag.getInteger("chargeRate");
             rechargeDelay = tag.getInteger("rechargeDelay");
             rechargeTicker = tag.getInteger("rechargeTicker");
             rechargeRate = tag.getInteger("rechargeRate");
             hitTicker = tag.getInteger("hitTicker");
             lastHit = tag.getInteger("lastHit");
             absorbed = tag.getInteger("absorbed");
+            amp = tag.getInteger("amp");
             canHit = tag.getBoolean("canHit");
+            charging = tag.getBoolean("charging");
         }
     }
 	
@@ -291,13 +340,19 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 	
 	public String getTextureFile()
     {
-        return "/BL2/textures/Items.png";
+        return "/BL2/textures/Shields.png";
+    }
+	
+	public int getIconFromDamage(int par1)
+    {
+        return par1 - 1;
     }
 
 	@Override
-	public String getArmorTextureFile(ItemStack itemstack) {
+	public String getArmorTextureFile(ItemStack itemstack) {	
+		int damVal = itemstack.getItemDamage();
 		if (itemstack.itemID == BL2Core.shield.shiftedIndex){
-			return "/BL2/textures/Armor/shield_1.png";
+			return "/BL2/textures/Armor/shield_"+ damVal +".png";
 		}
 		return null;
 	}

@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Iterator;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
@@ -20,7 +21,7 @@ public class NetworkHandler implements IPacketHandler
 	public static final int particlePacketID = 0;
 	public static final int reloadPacketID = 1;
 	
-	public void sendParticlePacket(World world, double x, double y, double z, double px, double py, double pz, int inventoryIndex)
+	public void sendParticlePacket(World world, double x, double y, double z, int playerID, int type, int inventoryIndex)
 	{
 		try
         {
@@ -32,9 +33,8 @@ public class NetworkHandler implements IPacketHandler
             out.writeDouble(x);
             out.writeDouble(y);
             out.writeDouble(z);
-            out.writeDouble(px);
-            out.writeDouble(py);
-            out.writeDouble(pz);
+            out.writeInt(playerID);
+            out.writeInt(type);
             out.close();
             Packet250CustomPayload packet = new Packet250CustomPayload();
             packet.channel = "bl2";
@@ -47,10 +47,10 @@ public class NetworkHandler implements IPacketHandler
             {
                 EntityPlayer player = players.next();
                 
-                if (player.getDistanceSq(px + x, py + y, pz + z) < 256.0D)
-                {
-                	//System.out.println("added for");
-                    PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
+                Entity hostPlayer = world.getEntityByID(playerID);
+                
+                if(player.getDistanceToEntity(hostPlayer) < 16.0D){
+                	PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
                 }
             }
         }

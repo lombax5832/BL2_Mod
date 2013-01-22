@@ -12,4 +12,9 @@ public class BL2Proxy {
 	{
 		
 	}
+
+	public void registerRenderTickHandler() {
+		// TODO Auto-generated method stub
+		
+	}
 }

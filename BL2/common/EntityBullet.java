@@ -273,7 +273,7 @@ public class EntityBullet extends Entity implements IProjectile
                 else
                 {
                 	int var21 = 1;
-                	this.worldObj.spawnParticle("crit", this.posX + this.motionX * (double)var21 / 4.0D, this.posY + this.motionY * (double)var21 / 4.0D, this.posZ + this.motionZ * (double)var21 / 4.0D, -this.motionX, -this.motionY + 0.2D, -this.motionZ);
+                	this.worldObj.spawnParticle("crit", this.posX + this.motionX * (double)var21 / 4.0D, this.posY + this.motionY * (double)var21 / 4.0D, this.posZ + this.motionZ * (double)var21 / 4.0D, this.motionX, this.motionY + 0.2D, this.motionZ);
                     this.motionX *= -0.10000000149011612D;
                     this.motionY *= -0.10000000149011612D;
                     this.motionZ *= -0.10000000149011612D;
