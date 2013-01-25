@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.util.Iterator;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
@@ -20,6 +21,7 @@ public class NetworkHandler implements IPacketHandler
 {
 	public static final int particlePacketID = 0;
 	public static final int reloadPacketID = 1;
+	public static final int grenadeParentPacketID = 2;
 	
 	public void sendParticlePacket(World world, double x, double y, double z, int playerID, int type, int inventoryIndex)
 	{
@@ -27,7 +29,7 @@ public class NetworkHandler implements IPacketHandler
         {
 			ByteArrayOutputStream baout = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(baout);
-            out.writeByte(0);
+            out.writeByte(particlePacketID);
             out.writeInt(world.provider.dimensionId);
             out.writeInt(inventoryIndex);
             out.writeDouble(x);
@@ -49,7 +51,7 @@ public class NetworkHandler implements IPacketHandler
                 
                 Entity hostPlayer = world.getEntityByID(playerID);
                 
-                if(player.getDistanceToEntity(hostPlayer) < 16.0D){
+                if(player.getDistanceSqToEntity(hostPlayer) < 64.0D){
                 	PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
                 }
             }
@@ -63,6 +65,41 @@ public class NetworkHandler implements IPacketHandler
 	public void sendReloaderPacket()
 	{
 		
+	}
+	
+	public void sendParentPacket(World world, EntityGrenade grenade, EntityLiving parent)
+	{
+		try
+        {
+			ByteArrayOutputStream baout = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(baout);
+            out.writeByte(grenadeParentPacketID);
+            out.writeInt(world.provider.dimensionId);
+            out.writeInt(grenade.entityId);
+            out.writeInt(parent.entityId);
+            out.close();
+            Packet250CustomPayload packet = new Packet250CustomPayload();
+            packet.channel = "bl2";
+            packet.isChunkDataPacket = false;
+            packet.data = baout.toByteArray();
+            packet.length = baout.size();
+            
+            Iterator<EntityPlayer> players = world.playerEntities.iterator();
+
+            while (players.hasNext())
+            {
+                EntityPlayer player = players.next();
+                
+                if(player.getDistanceSqToEntity(grenade) < 64.0D)
+                {
+                	PacketDispatcher.sendPacketToPlayer(packet, (Player)player);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+        	ex.printStackTrace();
+        }
 	}
 
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player p) 

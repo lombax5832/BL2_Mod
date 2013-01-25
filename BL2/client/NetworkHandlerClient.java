@@ -9,10 +9,12 @@ import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.src.ModLoader;
+import BL2.common.EntityGrenade;
 import BL2.common.NetworkHandler;
 import BL2.common.ShieldFX;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -40,7 +42,7 @@ public class NetworkHandlerClient extends NetworkHandler
         {
 			ByteArrayOutputStream baout = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(baout);
-            out.writeByte(1);
+            out.writeByte(reloadPacketID);
             out.close();
             Packet250CustomPayload packet = new Packet250CustomPayload();
             packet.channel = "bl2";
@@ -127,6 +129,27 @@ public class NetworkHandlerClient extends NetworkHandler
                     	ModLoader.getMinecraftInstance().effectRenderer.addEffect(fx);
                     }
                     
+                }
+                case NetworkHandler.grenadeParentPacketID:
+                {
+                	DataInputStream din = new DataInputStream(in);
+                	int dimention = din.readInt();
+                    int gid = din.readInt();
+                    int pid = din.readInt();
+                    WorldClient world = Minecraft.getMinecraft().theWorld;
+
+                    if (world.provider.dimensionId != dimention)
+                    {
+                        return;
+                    }
+                    
+                    EntityGrenade grenade = (EntityGrenade) world.getEntityByID(gid);
+                    EntityLiving parent = (EntityLiving) world.getEntityByID(pid);
+                    
+                    if(grenade != null)
+                    {
+                    	grenade.stuckTo = parent;
+                    }
                 }
             }
         }
