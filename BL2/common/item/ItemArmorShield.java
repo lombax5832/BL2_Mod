@@ -1,24 +1,18 @@
-package BL2.common;
+package BL2.common.item;
 
-import java.awt.Color;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector;
+import BL2.common.BL2Core;
+import BL2.common.handler.IItemTickListener;
 
-import BL2.common.ItemGun.GunAtributes;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import net.minecraft.util.DamageSource;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.ModLoader;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.IArmorTextureProvider;
 import net.minecraftforge.common.ISpecialArmor;
 
@@ -72,8 +66,8 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 		        ShieldAtributes atr = new ShieldAtributes(stack);
 				if(j == 2){
 					atr.maxcharge = 400;
-					atr.rechargeDelay = 200;
-					atr.chargeRate = 3;
+					atr.rechargeDelay = 400;
+					atr.chargeRate = 2;
 				}
 		        atr.rechargeTicker = 1;
 		        atr.charge = atr.maxcharge;
@@ -313,9 +307,9 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 	
 	public static class Vector
 	{
-		double x;
-		double y; 
-		double z;
+		public double x;
+		public double y; 
+		public double z;
 		
 		public Vector(double x, double y, double z)
 		{

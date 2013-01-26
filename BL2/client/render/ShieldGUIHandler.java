@@ -1,4 +1,4 @@
-package BL2.client;
+package BL2.client.render;
 
 import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
@@ -33,8 +33,8 @@ import org.lwjgl.opengl.GL12;
 import vazkii.codebase.common.CommonUtils;
 
 import BL2.common.BL2Core;
-import BL2.common.ItemArmorShield;
-import BL2.common.ItemArmorShield.ShieldAtributes;
+import BL2.common.item.ItemArmorShield;
+import BL2.common.item.ItemArmorShield.ShieldAtributes;
 import BL2.common.Reference;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.ITickHandler;

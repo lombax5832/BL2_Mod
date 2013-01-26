@@ -1,4 +1,4 @@
-package BL2.client;
+package BL2.client.handler;
 
 import java.util.EnumSet;
 

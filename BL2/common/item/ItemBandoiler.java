@@ -1,8 +1,8 @@
-package BL2.common;
+package BL2.common.item;
 
 import java.util.List;
 
-import BL2.common.ItemGun.GunAtributes;
+import BL2.common.BL2Core;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ public class ItemBandoiler extends Item
 {
 	public static final String[] ammoTypes = new String[] {"", "Pistol", "SMG", "Assault Rifle", "Rocket Launcher", "Sniper", "Shotgun"};
 	
-	protected ItemBandoiler(int id)
+	public ItemBandoiler(int id)
 	{
 		super(id);
 		this.maxStackSize = 1;

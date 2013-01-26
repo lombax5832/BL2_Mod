@@ -1,12 +1,13 @@
-package BL2.common;
+package BL2.common.item;
 
 import java.util.List;
+
+import BL2.common.BL2Core;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class ItemBullets extends Item
 {
@@ -21,7 +22,7 @@ public class ItemBullets extends Item
 	 }
 
 	
-    protected ItemBullets(int id)
+    public ItemBullets(int id)
     {
         super(id);
         this.maxStackSize = 64;

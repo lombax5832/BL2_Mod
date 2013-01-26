@@ -1,8 +1,9 @@
-package BL2.common;
+package BL2.common.item;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
+import BL2.common.BL2Core;
+import BL2.common.entity.EntityBullet;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -244,7 +245,7 @@ public class ItemGun extends Item
         		Class.forName("net.minecraft.client.settings.KeyBinding");
         		//client
         		//System.out.println(BL2.client.BL2KeyHandler.reloadKey.pressed);
-	        	if ((atr.bulletsleft <= 1 && atr.reloadticker == 0) || (BL2.client.BL2KeyHandler.reloadKey.pressed && !fullAmmo(atr)))
+	        	if ((atr.bulletsleft <= 1 && atr.reloadticker == 0) || (BL2.client.handler.BL2KeyHandler.reloadKey.pressed && !fullAmmo(atr)))
 			    {
 					reload(par1ItemStack);
 			        return;

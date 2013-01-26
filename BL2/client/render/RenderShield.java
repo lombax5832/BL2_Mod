@@ -1,4 +1,4 @@
-package BL2.client;
+package BL2.client.render;
 
 import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_FLAT;
@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import BL2.common.BL2Core;
-import BL2.common.ItemArmorShield;
+import BL2.common.item.ItemArmorShield;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

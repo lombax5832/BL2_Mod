@@ -1,6 +1,5 @@
-package BL2.common;
+package BL2.common.proxy;
 
-import net.minecraftforge.client.MinecraftForgeClient;
 
 public class BL2Proxy {
 	public void registerRenderInformation()

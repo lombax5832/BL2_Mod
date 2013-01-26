@@ -1,4 +1,4 @@
-package BL2.client;
+package BL2.client.handler;
 
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
@@ -14,9 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.src.ModLoader;
-import BL2.common.EntityGrenade;
-import BL2.common.NetworkHandler;
-import BL2.common.ShieldFX;
+import BL2.client.render.ShieldFX;
+import BL2.common.entity.EntityGrenade;
+import BL2.common.handler.NetworkHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
@@ -130,25 +130,33 @@ public class NetworkHandlerClient extends NetworkHandler
                     }
                     
                 }
-                case NetworkHandler.grenadeParentPacketID:
+                case NetworkHandler.grenadePacketID:
                 {
                 	DataInputStream din = new DataInputStream(in);
                 	int dimention = din.readInt();
-                    int gid = din.readInt();
-                    int pid = din.readInt();
-                    WorldClient world = Minecraft.getMinecraft().theWorld;
+                	
+                	WorldClient world = Minecraft.getMinecraft().theWorld;
 
                     if (world.provider.dimensionId != dimention)
                     {
                         return;
                     }
-                    
+                	
+                    int gid = din.readInt();
                     EntityGrenade grenade = (EntityGrenade) world.getEntityByID(gid);
-                    EntityLiving parent = (EntityLiving) world.getEntityByID(pid);
-                    
-                    if(grenade != null)
+                    if(grenade == null)
                     {
-                    	grenade.stuckTo = parent;
+                    	return;
+                    }
+                    
+                    String var = din.readUTF();
+                    if(var.equals("parent"))
+                    {
+                        grenade.stuckTo = (EntityLiving)world.getEntityByID(din.readInt());
+                    }else
+                    if(var.equals("homing"))
+                    {
+                        grenade.homing = din.readBoolean();
                     }
                 }
             }

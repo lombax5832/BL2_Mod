@@ -1,4 +1,4 @@
-package BL2.common;
+package BL2.common.handler;
 
 import java.util.EnumSet;
 

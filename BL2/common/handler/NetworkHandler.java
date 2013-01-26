@@ -1,4 +1,4 @@
-package BL2.common;
+package BL2.common.handler;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -6,8 +6,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Iterator;
 
+import BL2.common.BL2Core;
+import BL2.common.entity.EntityGrenade;
+import BL2.common.item.ItemGun;
+
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
@@ -21,7 +24,7 @@ public class NetworkHandler implements IPacketHandler
 {
 	public static final int particlePacketID = 0;
 	public static final int reloadPacketID = 1;
-	public static final int grenadeParentPacketID = 2;
+	public static final int grenadePacketID = 2;
 	
 	public void sendParticlePacket(World world, double x, double y, double z, int playerID, int type, int inventoryIndex)
 	{
@@ -67,16 +70,24 @@ public class NetworkHandler implements IPacketHandler
 		
 	}
 	
-	public void sendParentPacket(World world, EntityGrenade grenade, EntityLiving parent)
+	public void sendGrenadePacket(World world, EntityGrenade grenade, String var, Object arg)
 	{
 		try
         {
 			ByteArrayOutputStream baout = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(baout);
-            out.writeByte(grenadeParentPacketID);
+            out.writeByte(grenadePacketID);
             out.writeInt(world.provider.dimensionId);
             out.writeInt(grenade.entityId);
-            out.writeInt(parent.entityId);
+            out.writeUTF(var);
+            if(var.equals("parent"))
+            {
+            	 out.writeInt(((Entity)arg).entityId);
+            }else
+            if(var.equals("homing"))
+            {
+            	out.writeBoolean((Boolean)arg);
+            }
             out.close();
             Packet250CustomPayload packet = new Packet250CustomPayload();
             packet.channel = "bl2";

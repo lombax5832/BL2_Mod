@@ -1,6 +1,8 @@
-package BL2.common;
+package BL2.common.item;
 
 import java.util.List;
+
+import BL2.common.BL2Core;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

@@ -1,4 +1,4 @@
-package BL2.common;
+package BL2.common.handler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
