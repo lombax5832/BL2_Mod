@@ -26,8 +26,9 @@ public class RenderGrenade extends Render{
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glTranslatef((float)par2, (float)par4 + 1.2F, (float)par6);
         GL11.glScalef(1.0F, -1F, -1F);
-        
-        GL11.glRotatef(par1EntityArrow.rotationYaw + 180, 0, 1, 0);
+        par1EntityArrow.rotationYaw = par1EntityArrow.rotationYaw + 30;
+        par1EntityArrow.rotationPitch = par1EntityArrow.rotationPitch + 30;
+        GL11.glRotatef(par1EntityArrow.rotationYaw, 0, 1, 0);
         
         model.render();
 

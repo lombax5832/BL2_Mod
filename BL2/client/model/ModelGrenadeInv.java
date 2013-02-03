@@ -15,13 +15,13 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelGrenade extends ModelBase
+public class ModelGrenadeInv extends ModelBase
 {
   //fields
     ModelRenderer Shape1;
     ModelRenderer Shape2;
   
-  public ModelGrenade()
+  public ModelGrenadeInv()
   {
     textureWidth = 64;
     textureHeight = 32;
@@ -33,8 +33,8 @@ public class ModelGrenade extends ModelBase
       Shape1.mirror = true;
       setRotation(Shape1, 0F, 0F, 0F);
       Shape2 = new ModelRenderer(this, 12, 0);
-      Shape2.addBox(-0.5F, -1.5F, -1.466667F, 1, 2, 2);
-      Shape2.setRotationPoint(0F, 19F, -0.5F);
+      Shape2.addBox(-0.5F, -2.5F, -2F, 1, 2, 2);
+      Shape2.setRotationPoint(0F, 20F, 0F);
       Shape2.setTextureSize(64, 32);
       Shape2.mirror = true;
       setRotation(Shape2, 0F, 0F, 0F);
@@ -54,8 +54,8 @@ public class ModelGrenade extends ModelBase
   
   private void setRotation(ModelRenderer model, float x, float y, float z)
   {
-    model.rotateAngleX = x;
-    model.rotateAngleY = y;
+    model.rotateAngleX = 3.2F;
+    model.rotateAngleY = 1.5F;
     model.rotateAngleZ = z;
   }
   

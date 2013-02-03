@@ -116,7 +116,7 @@ public class ItemGun extends Item
     		Damage = Damage + damage;
     	}
     	if(hasAmp){
-    		Damage = Damage + " + " + Amp + ")";
+    		Damage = Damage + " + " + Amp + " Amp Damage" + ")";
     	}
     	if(atr.pellets > 1){
     		Damage = Damage + "x" + atr.pellets + " ";
@@ -232,7 +232,6 @@ public class ItemGun extends Item
     public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
     {
         GunAtributes atr = new GunAtributes(par1ItemStack);
-        
         //System.out.println(hasAmp((EntityPlayer) par3Entity));
         //System.out.println(Keyboard.isKeyDown(19));
     	//System.out.println(atr.explosivepower);
@@ -668,6 +667,7 @@ public class ItemGun extends Item
         	//chance = 100% - num x - 1
         }
         
+        /*
         if(atr.Company == 0)
         {
         	float g = (float) Math.random() * 100;
@@ -812,6 +812,9 @@ public class ItemGun extends Item
         	atr.explosive = true;
         	atr.bulletspeed *= .1;
         }
+        */
+        
+        genSMG(atr);
         
 //        System.out.println("comp:" + atr.Company);
 //        System.out.println("type" +atr.guntype);

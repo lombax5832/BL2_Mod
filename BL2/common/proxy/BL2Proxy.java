@@ -16,4 +16,14 @@ public class BL2Proxy {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void initItemRenderer(int itemID, int itemDamage) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void initItemRenderer(int itemID) {
+		// TODO Auto-generated method stub
+		
+	}
 }

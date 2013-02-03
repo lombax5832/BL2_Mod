@@ -2,6 +2,8 @@ package BL2.client.proxy;
 
 import net.minecraftforge.client.MinecraftForgeClient;
 import BL2.client.handler.BL2KeyHandler;
+import BL2.client.render.RenderGrenadeInHand;
+import BL2.client.render.RenderGunInHand;
 import BL2.client.render.RenderBullet;
 import BL2.client.render.RenderGrenade;
 import BL2.client.render.ShieldGUIHandler;
@@ -27,6 +29,19 @@ public class BL2Client extends BL2Proxy{
             RenderingRegistry.registerEntityRenderingHandler(EntityGrenade.class, new RenderGrenade());
             //MinecraftForge.EVENT_BUS.register(new RenderShield());
     }
+	
+	@Override
+	public void initItemRenderer(int itemID)
+	{
+	    if (itemID == BL2Core.guns.shiftedIndex)
+	    {
+	    	MinecraftForgeClient.registerItemRenderer(itemID, new RenderGunInHand());
+	    }
+	    if(itemID == BL2Core.grenade.shiftedIndex)
+	    {
+	    	MinecraftForgeClient.registerItemRenderer(itemID, new RenderGrenadeInHand());
+	    }
+	}
 
 	@Override
     public void registerRenderTickHandler() {

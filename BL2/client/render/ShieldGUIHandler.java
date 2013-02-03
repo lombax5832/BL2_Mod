@@ -64,6 +64,12 @@ public class ShieldGUIHandler implements ITickHandler {
                 	//System.out.println("works");
                     renderStoneHUD();
                 }
+                if (player.getCurrentEquippedItem() != null){
+//		            if (player.getCurrentEquippedItem().itemID == BL2Core.guns.shiftedIndex || player.getCurrentEquippedItem().itemID == BL2Core.grenade.shiftedIndex){
+            		BL2Core.proxy.initItemRenderer(BL2Core.guns.shiftedIndex);
+            		BL2Core.proxy.initItemRenderer(BL2Core.grenade.shiftedIndex);
+//		            }
+                }
             }
         }
 	}

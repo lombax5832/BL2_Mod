@@ -31,7 +31,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = "BL2", name = "Borderlands 2", version = "1.2 (1.4.6/7)")
+@Mod(modid = "BL2", name = "Borderlands 2", version = "1.3 (1.4.6/7)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, 
 clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandlerClient.class),
 serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandler.class))
@@ -43,6 +43,7 @@ public class BL2Core implements ITickHandler
     public static Item shield;
     public static Item grenade;
     public static Item temp;
+    public static int gunsId;
     
     public static int shieldrenderid = 0;
 
@@ -64,9 +65,11 @@ public class BL2Core implements ITickHandler
     	proxy.registerKeyBinding();
     	proxy.registerRenderInformation();
     	
+    	
+    	
     	EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
     	EntityRegistry.registerModEntity(EntityGrenade.class, "Grenade", 2, this, 64, 10, true);
-        
+    	
         guns = new ItemGun(16000);
         bullets = new ItemBullets(16001);
         bandoiler = new ItemBandoiler(16002);

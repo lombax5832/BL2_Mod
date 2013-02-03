@@ -106,6 +106,7 @@ public class EntityGrenade extends EntityThrowable
 	    		if(timeTilBoom < 0)
 	    		{
 	    			worldObj.newExplosion(this, posX, posY, posZ, 2.0F, false, false);
+	    			
 	    			setDead();
 	    		}
 	    	}
