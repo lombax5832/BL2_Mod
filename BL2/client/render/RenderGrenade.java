@@ -29,6 +29,7 @@ public class RenderGrenade extends Render{
         par1EntityArrow.rotationYaw = par1EntityArrow.rotationYaw + 30;
         par1EntityArrow.rotationPitch = par1EntityArrow.rotationPitch + 30;
         GL11.glRotatef(par1EntityArrow.rotationYaw, 0, 1, 0);
+        GL11.glRotatef(par1EntityArrow.rotationPitch, 0, 1, 0);
         
         model.render();
 

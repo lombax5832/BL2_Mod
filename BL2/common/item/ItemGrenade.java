@@ -44,10 +44,12 @@ public class ItemGrenade extends Item
         	if(j == 4){
         		atr.homing = true;
 	        	atr.sticky = true;
-        	}else{
-        		atr.homing = false;
-	        	atr.sticky = false;
-        	}
+        	}else
+//        	if(j == 5){
+//        		atr.homing = false;
+//	        	atr.sticky = false;
+//	        	atr.hackySack = true;
+//        	}
 	        l.add(stack);
 	        atr.save(stack);
         }
@@ -62,6 +64,10 @@ public class ItemGrenade extends Item
     	}
     	if(atr.homing){
     		name += "Homing ";
+    		changedName = true;
+    	}
+    	if(atr.hackySack){
+    		name += "Hacky Sack ";
     		changedName = true;
     	}
     	if(changedName == false){
@@ -93,7 +99,7 @@ public class ItemGrenade extends Item
         if (!world.isRemote)
         {
         	GrenadeAtributes atr = new GrenadeAtributes(item);
-        	world.spawnEntityInWorld(new EntityGrenade(world, player, atr.sticky, atr.homing));
+        	world.spawnEntityInWorld(new EntityGrenade(world, player, atr.sticky, atr.homing, atr.hackySack));
         }
 
         return item;
@@ -103,6 +109,7 @@ public class ItemGrenade extends Item
     {
 		public boolean sticky;
 		public boolean homing;
+		public boolean hackySack;
 
         public GrenadeAtributes(ItemStack it)
         {
@@ -120,6 +127,7 @@ public class ItemGrenade extends Item
             
             tag.setBoolean("sticky", sticky);
             tag.setBoolean("homing", homing);
+            tag.setBoolean("hackySack", hackySack);
 		    if(newTag)
 	            	it.setTagCompound(tag);
 	        }
@@ -135,6 +143,7 @@ public class ItemGrenade extends Item
 
             sticky = tag.getBoolean("sticky");
             homing = tag.getBoolean("homing");
+            hackySack = tag.getBoolean("hackySack");
         }
     }
 }

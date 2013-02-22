@@ -33,11 +33,11 @@ public class BL2Client extends BL2Proxy{
 	@Override
 	public void initItemRenderer(int itemID)
 	{
-	    if (itemID == BL2Core.guns.shiftedIndex)
+	    if (itemID == BL2Core.guns.itemID)
 	    {
 	    	MinecraftForgeClient.registerItemRenderer(itemID, new RenderGunInHand());
 	    }
-	    if(itemID == BL2Core.grenade.shiftedIndex)
+	    if(itemID == BL2Core.grenade.itemID)
 	    {
 	    	MinecraftForgeClient.registerItemRenderer(itemID, new RenderGrenadeInHand());
 	    }

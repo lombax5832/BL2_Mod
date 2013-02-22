@@ -23,7 +23,7 @@ public final class CreativeTabBL2 extends CreativeTabs
     @SideOnly(Side.CLIENT)
     public int getTabIconItemIndex()
     {
-        return BL2Core.temp.shiftedIndex;
+        return BL2Core.temp.itemID;
     }
     
     /**

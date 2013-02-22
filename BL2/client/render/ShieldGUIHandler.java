@@ -64,10 +64,10 @@ public class ShieldGUIHandler implements ITickHandler {
                 	//System.out.println("works");
                     renderStoneHUD();
                 }
-                if (player.getCurrentEquippedItem() != null){
+                if (player.isDead == false){
 //		            if (player.getCurrentEquippedItem().itemID == BL2Core.guns.shiftedIndex || player.getCurrentEquippedItem().itemID == BL2Core.grenade.shiftedIndex){
-            		BL2Core.proxy.initItemRenderer(BL2Core.guns.shiftedIndex);
-            		BL2Core.proxy.initItemRenderer(BL2Core.grenade.shiftedIndex);
+            		BL2Core.proxy.initItemRenderer(BL2Core.guns.itemID);
+            		BL2Core.proxy.initItemRenderer(BL2Core.grenade.itemID);
 //		            }
                 }
             }
@@ -94,7 +94,7 @@ public class ShieldGUIHandler implements ITickHandler {
         {
             stack = player.inventory.armorItemInSlot(i);
             
-            if (stack != null && stack.itemID == BL2Core.shield.shiftedIndex)
+            if (stack != null && stack.itemID == BL2Core.shield.itemID)
             {
                 return true;
             }
@@ -112,7 +112,7 @@ public class ShieldGUIHandler implements ITickHandler {
 
             if (stack != null)
             {
-                if (stack.itemID == BL2Core.shield.shiftedIndex)
+                if (stack.itemID == BL2Core.shield.itemID)
                 {
                     ItemArmorShield.ShieldAtributes str = new ItemArmorShield.ShieldAtributes(stack);
                     return (int) (((float)str.charge/str.maxcharge) * 80);
@@ -132,7 +132,7 @@ public class ShieldGUIHandler implements ITickHandler {
 
             if (stack != null)
             {
-                if (stack.itemID == BL2Core.shield.shiftedIndex)
+                if (stack.itemID == BL2Core.shield.itemID)
                 {
                     ItemArmorShield.ShieldAtributes str = new ItemArmorShield.ShieldAtributes(stack);
                     return str;

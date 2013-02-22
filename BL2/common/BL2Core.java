@@ -2,6 +2,8 @@ package BL2.common;
 
 import java.util.EnumSet;
 
+import buildcraft.BuildCraftEnergy;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -31,7 +33,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = "BL2", name = "Borderlands 2", version = "1.3 (1.4.6/7)")
+@Mod(modid = "BL2", name = "Borderlands 2", version = "1.5 (1.4.6/7)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, 
 clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandlerClient.class),
 serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandler.class))
@@ -65,7 +67,7 @@ public class BL2Core implements ITickHandler
     	proxy.registerKeyBinding();
     	proxy.registerRenderInformation();
     	
-    	
+    	//LanguageRegistry.addName(new ItemStack(BuildCraftEnergy.engineBlock, 1, 3), "Eridium Engine");
     	
     	EntityRegistry.registerModEntity(EntityBullet.class, "Bullet", 1, this, 64, 10, true);
     	EntityRegistry.registerModEntity(EntityGrenade.class, "Grenade", 2, this, 64, 10, true);
@@ -117,10 +119,10 @@ public class BL2Core implements ITickHandler
     			}
     		}
     		
-    		if(update)
-    		{
-    			ep.openContainer.updateCraftingResults();
-    		}
+//    		if(update)
+//    		{
+//    			ep.openContainer.updateCraftingResults();
+//    		}
     	}
     }
 

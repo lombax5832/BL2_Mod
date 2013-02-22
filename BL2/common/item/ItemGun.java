@@ -246,6 +246,7 @@ public class ItemGun extends Item
         		//System.out.println(BL2.client.BL2KeyHandler.reloadKey.pressed);
 	        	if ((atr.bulletsleft <= 1 && atr.reloadticker == 0) || (BL2.client.handler.BL2KeyHandler.reloadKey.pressed && !fullAmmo(atr)))
 			    {
+	        		BL2Core.nethandler.sendReloaderPacket();
 					reload(par1ItemStack);
 			        return;
 			    }
@@ -374,7 +375,7 @@ public class ItemGun extends Item
 
             if (stack != null && stack.getItemDamage() == type)
             {
-                if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
+                if (stack.itemID == BL2Core.bandoiler.itemID)
                 {
                     ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
 
@@ -383,7 +384,7 @@ public class ItemGun extends Item
                         return true;
                     }
                 }
-                else if (stack.itemID == BL2Core.bullets.shiftedIndex)
+                else if (stack.itemID == BL2Core.bullets.itemID)
                 {
                     return true;
                 }
@@ -403,7 +404,7 @@ public class ItemGun extends Item
 
             if (stack != null && stack.getItemDamage() == 5)
             {
-                if (stack.itemID == BL2Core.shield.shiftedIndex)
+                if (stack.itemID == BL2Core.shield.itemID)
                 {
                     return true;
                 }
@@ -423,7 +424,7 @@ public class ItemGun extends Item
 
             if (stack != null && stack.getItemDamage() == 5)
             {
-                if (stack.itemID == BL2Core.shield.shiftedIndex)
+                if (stack.itemID == BL2Core.shield.itemID)
                 {
                     ItemArmorShield.ShieldAtributes str = new ItemArmorShield.ShieldAtributes(stack);
 
@@ -452,7 +453,7 @@ public class ItemGun extends Item
 
             if (stack != null && stack.getItemDamage() == type)
             {
-                if (stack.itemID == BL2Core.bandoiler.shiftedIndex)
+                if (stack.itemID == BL2Core.bandoiler.itemID)
                 {
                     ItemBandoiler.BandStor stor = new ItemBandoiler.BandStor(stack);
 
@@ -465,7 +466,7 @@ public class ItemGun extends Item
                         return true;
                     }
                 }
-                else if (stack.itemID == BL2Core.bullets.shiftedIndex)
+                else if (stack.itemID == BL2Core.bullets.itemID)
                 {
                     stack.stackSize--;
                     atr.bulletsleft++;
@@ -559,6 +560,18 @@ public class ItemGun extends Item
      	else
      	{
      		genShotgun(atr);
+     	}
+    }
+    
+    public static void genSmgAssault(GunAtributes atr)
+    {
+    	float g = (float) Math.random() * 100;
+     	
+     	if(g < 50)
+     	{
+     		genSMG(atr);
+     	}else{
+     		genAR(atr);
      	}
     }
     
@@ -666,7 +679,6 @@ public class ItemGun extends Item
         	atr.ammoPerShot = 1;
         	//chance = 100% - num x - 1
         }
-        
         /*
         if(atr.Company == 0)
         {
@@ -813,8 +825,61 @@ public class ItemGun extends Item
         	atr.bulletspeed *= .1;
         }
         */
-        
-        genSMG(atr);
+        if(atr.Company == 0)
+        {
+        	genSmgAssault(atr);
+        	atr.clipsize = 3+1;
+        	atr.firetime = 1;
+        	atr.ammoPerShot = 1;
+        	atr.reloadtime = 20 + 1;
+        }
+         if(atr.Company == 1)
+        { 
+        	 genSmgAssault(atr);
+         	
+        	//atr.explosive = true;
+        	atr.throwtoreload = true;
+        }
+        if(atr.Company == 2)
+        {
+        	genSmgAssault(atr);
+        	atr.damage *= 1.5;
+        }
+        if(atr.Company == 3)
+        {
+        	genSmgAssault(atr);
+        	atr.damage *= .75;
+        	atr.reloadtime *= .5;
+        }
+        //Dahl = 0, Tediore = 1, Jakobs = 2, Maliwan = 3, Bandit = 4, Hyerion = 5, Vladof = 6, Torgue = 7
+        //pistol = 0, smg = 1, assault rifle = 2, rocket launcher = 3, sniper = 4, shotgun = 5
+        if(atr.Company == 4)
+        {
+        	genSmgAssault(atr);
+        	
+        	atr.clipsize *= 2;
+        }
+        if(atr.Company == 5)
+        {
+        	genSmgAssault(atr);
+        	atr.bulletspeed *= 1.5;
+        }
+        //Dahl = 0, Tediore = 1, Jakobs = 2, Maliwan = 3, Bandit = 4, Hyerion = 5, Vladof = 6, Torgue = 7
+        //pistol = 0, smg = 1, assault rifle = 2, rocket launcher = 3, sniper = 4, shotgun = 5
+        if(atr.Company == 6)
+        {
+        	genSmgAssault(atr);
+        	atr.firetime = 1;
+        	atr.clipsize *= 1.25;
+        	atr.accuracy *= 0.75;
+        }
+        if(atr.Company == 7)
+        {
+        	genSmgAssault(atr);
+        	atr.explosive = true;
+        	atr.bulletspeed *= .1;
+        }
+//        genSMG(atr);
         
 //        System.out.println("comp:" + atr.Company);
 //        System.out.println("type" +atr.guntype);
@@ -830,7 +895,7 @@ public class ItemGun extends Item
          * number of ticks between fires, should be >0
          */
         public int firetime = 2;
-        public boolean explosive = false;
+        public boolean explosive;
         public float explosivepower = 1.0F;
         public int clipsize = 31 + 1;
         public int ammoPerShot = 1;

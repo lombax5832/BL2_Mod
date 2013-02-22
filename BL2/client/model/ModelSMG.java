@@ -178,8 +178,8 @@ public class ModelSMG extends ModelBase
   private void setRotation(ModelRenderer model, float x, float y, float z)
   {
 	  model.rotateAngleX = x;
-		model.rotateAngleY = 0.7F;
-		model.rotateAngleZ = 40.8F;
+	  model.rotateAngleY = 0.7F;
+	  model.rotateAngleZ = 40.8F;
   }
   
   public void render(float scale) {

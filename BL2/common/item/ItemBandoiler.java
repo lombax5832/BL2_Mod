@@ -67,7 +67,7 @@ public class ItemBandoiler extends Item
 		 for(int i = 0; i < 36; i++)
 		 {
 			 stack = player.inventory.getStackInSlot(i);
-			 if(stack != null && stack.itemID == BL2Core.bullets.shiftedIndex && stack.getItemDamage() == type)
+			 if(stack != null && stack.itemID == BL2Core.bullets.itemID && stack.getItemDamage() == type)
 			 {
 				 return true;
 			 }
@@ -107,7 +107,7 @@ public class ItemBandoiler extends Item
 			for(int i = 0; i < 36; i++)
 			{
 				stack = par3EntityPlayer.inventory.getStackInSlot(i);
-				if(stack != null && stor.bullets < maxbullets[par1ItemStack.getItemDamage()] && stack.itemID == BL2Core.bullets.shiftedIndex && stack.getItemDamage() ==  par1ItemStack.getItemDamage())
+				if(stack != null && stor.bullets < maxbullets[par1ItemStack.getItemDamage()] && stack.itemID == BL2Core.bullets.itemID && stack.getItemDamage() ==  par1ItemStack.getItemDamage())
 				{
 					int o = Math.min(stack.stackSize, maxbullets[par1ItemStack.getItemDamage()] - stor.bullets);
 					stack.stackSize -= o;

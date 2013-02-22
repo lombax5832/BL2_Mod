@@ -345,7 +345,7 @@ public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTi
 	@Override
 	public String getArmorTextureFile(ItemStack itemstack) {	
 		int damVal = itemstack.getItemDamage();
-		if (itemstack.itemID == BL2Core.shield.shiftedIndex){
+		if (itemstack.itemID == BL2Core.shield.itemID){
 			return "/BL2/textures/Armor/shield_"+ damVal +".png";
 		}
 		return null;

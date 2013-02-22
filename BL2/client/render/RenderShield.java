@@ -77,7 +77,7 @@ public class RenderShield extends GuiIngame{
 		for(int i=0; i < 4; i++)
 		{
 			stack = inv.armorItemInSlot(i);
-			if(stack != null && stack.itemID == BL2Core.shield.shiftedIndex)
+			if(stack != null && stack.itemID == BL2Core.shield.itemID)
 			{
 				ItemArmorShield.ShieldAtributes str = new ItemArmorShield.ShieldAtributes(stack);
 				
@@ -96,7 +96,7 @@ public class RenderShield extends GuiIngame{
 		for(int i=0; i < 4; i++)
 		{
 			stack = inv.armorItemInSlot(i);
-			if(stack != null && stack.itemID == BL2Core.shield.shiftedIndex)
+			if(stack != null && stack.itemID == BL2Core.shield.itemID)
 			{
 				return true;
 			}

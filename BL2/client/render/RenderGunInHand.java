@@ -7,12 +7,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import BL2.client.model.ModelPistol;
-import BL2.client.model.ModelPistolInv;
-import BL2.client.model.ModelSMG;
-import BL2.client.model.ModelSMGInv;
-import BL2.client.model.ModelSniper;
-import BL2.client.model.ModelSniperInv;
+import BL2.client.model.*;
 
 
 public class RenderGunInHand implements IItemRenderer {
@@ -20,13 +15,16 @@ public class RenderGunInHand implements IItemRenderer {
     private ModelPistol pistolModel;
     private ModelSniper sniperModel;
     private ModelSMG smgModel;
+    private ModelAssaultRifle assaultRifleModel;
     
     private ModelSniperInv sniperInv;
     private ModelPistolInv pistolInv;
     private ModelSMGInv smgInv;
+    private ModelAssaultRifleInv assaultRifleInv;
     
     private int pistolId = 1;
     private int smgId = 2;
+    private int assaultId = 3;
     private int sniperId = 5;
 
     public RenderGunInHand() {
@@ -34,10 +32,12 @@ public class RenderGunInHand implements IItemRenderer {
     	sniperInv = new ModelSniperInv();
     	pistolInv = new ModelPistolInv();
     	smgInv = new ModelSMGInv();
+    	assaultRifleInv = new ModelAssaultRifleInv();
     	
     	smgModel = new ModelSMG();
         pistolModel = new ModelPistol();
         sniperModel = new ModelSniper();
+        assaultRifleModel = new ModelAssaultRifle();
     }
 
     @Override
@@ -63,7 +63,10 @@ public class RenderGunInHand implements IItemRenderer {
         		}else if(item.getItemDamage() == smgId){
         			renderSMG(0F, 0F, 0F);
         			break;
-        		}else if(item.getItemDamage() == sniperId){
+        		}else if(item.getItemDamage() == assaultId){
+        			renderAssault(1F, -0.8F, .6F);
+        			break;
+    			}else if(item.getItemDamage() == sniperId){
             		renderSniper(-.5F, -1.4F, 0F);
                 	break;
             	}
@@ -74,6 +77,9 @@ public class RenderGunInHand implements IItemRenderer {
 	                break;
             	}else if(item.getItemDamage() == smgId){
             		renderSMG(0F, .5F, .4F);
+        			break;
+        		}else if(item.getItemDamage() == assaultId){
+        			renderAssault(1F, -0.4F, .6F);
         			break;
         		}else if(item.getItemDamage() == sniperId){
             		renderSniper(.6F, -0.85F, 0.65F);
@@ -87,10 +93,13 @@ public class RenderGunInHand implements IItemRenderer {
             	}else if(item.getItemDamage() == smgId){
             		renderSMGForInventory(.6F, -0.1F, 0.7F);
         			break;
+        		}else if(item.getItemDamage() == assaultId){
+        			renderAssaultForInventory(.6F, -0.6F, 0.9F);
+        			break;
         		}else if(item.getItemDamage() == sniperId){
             		renderSniperForInventory(.3F, -1.0F, 1F);
                 	break;
-            	}
+        		}
             }
             default:
                 break;
@@ -158,5 +167,24 @@ public class RenderGunInHand implements IItemRenderer {
         GL11.glPopMatrix(); //end
     }
 
+    private void renderAssault(float x, float y, float z) {
+
+        Tessellator tesselator = Tessellator.instance;
+        ForgeHooksClient.bindTexture("/BL2/textures/Guns/AssaultRifleModel.png", 0);
+        GL11.glPushMatrix(); //start
+        GL11.glTranslatef(x, y, z); //size
+        assaultRifleModel.render(0.1F);
+        GL11.glPopMatrix(); //end
+    }
+    
+    private void renderAssaultForInventory(float x, float y, float z) {
+
+        Tessellator tesselator = Tessellator.instance;
+        ForgeHooksClient.bindTexture("/BL2/textures/Guns/AssaultRifleModel.png", 0);
+        GL11.glPushMatrix(); //start
+        GL11.glTranslatef(x, y, z); //size
+        assaultRifleInv.render(0.07F);
+        GL11.glPopMatrix(); //end
+    }
 
 }
