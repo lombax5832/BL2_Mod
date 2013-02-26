@@ -24,12 +24,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import f4113n.Borderlands2Mod.liquid.TileLiquidEridium;
 import f4113n.core.*;
+import f4113n.core.liquid.LiquidFX;
 import f4113n.core.liquid.TELiquidBlock;
 import f4113n.core.misc.*;
 import f4113n.core.te.FCBlockTile;
 import f4113n.core.te.parents.FCTile;
 
-@Mod(modid = "AGCore", name = "AdvGenerators", version = "1.4.6", dependencies = "after:FCore, IC2")
+@Mod(modid = "BL2", name = "Borderlands2Mod", version = "1.4.7", dependencies = "after:FCore")
 @NetworkMod(clientSideRequired = true)
 public class BL2Core extends FBase
 {
@@ -53,15 +54,14 @@ public class BL2Core extends FBase
 		
 		if(Platform.getSide() == Side.CLIENT)
 		{
-			/*try
+			try
 			{
 				Object o = Minecraft.class.getField("renderEngine").get(FMLClientHandler.instance().getClient());
-				o.getClass().getMethod("registerTextureFX", Class.forName("TextureFX")).invoke(o, new PlasmaFX());
+				o.getClass().getMethod("registerTextureFX", Class.forName("TextureFX")).invoke(o, new LiquidFX(this, 0, 0, 255, 0, 255, 0, 255));
 			}catch(Exception ex)
 			{
 				//not client?
 			}
-    		MinecraftForgeClient.preloadTexture(texturepath + "cables.png");*/
 		}
 	}
 	

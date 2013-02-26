@@ -31,7 +31,7 @@ import f4113n.Borderlands2Mod.common.item.ItemGun;
 import f4113n.Borderlands2Mod.common.item.ItemTemp;
 import f4113n.Borderlands2Mod.common.proxy.BL2Proxy;
 
-@Mod(modid = "BL2", name = "Borderlands 2", version = "1.5 (1.4.6/7)")
+@Mod(modid = "BL22", name = "Borderlands 2", version = "1.5 (1.4.6/7)")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, 
 clientPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandlerClient.class),
 serverPacketHandlerSpec = @NetworkMod.SidedPacketHandler(channels = {"bl2"}, packetHandler = NetworkHandler.class))

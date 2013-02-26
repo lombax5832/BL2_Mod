@@ -47,4 +47,10 @@ public class TileLiquidEridium extends TEFluid
 	{
 		return tile instanceof TileLiquidEridium;
 	}
+
+	@Override
+	public String getName()
+	{
+		return "Liquid Eridium";
+	}
 }
