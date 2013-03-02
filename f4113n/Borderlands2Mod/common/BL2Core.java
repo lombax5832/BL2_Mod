@@ -53,6 +53,7 @@ public class BL2Core implements ITickHandler
     public static NetworkHandler nethandler;
     
     public static CreativeTabBL2 tabBL2 = new CreativeTabBL2("Borderlands 2");
+	public static int liquidColor = 0x000000;
     
     @Mod.PreInit
     public void preInt(FMLPreInitializationEvent event){
@@ -77,7 +78,6 @@ public class BL2Core implements ITickHandler
         grenade = new ItemGrenade(16004);
         temp = new ItemTemp(16005);
         LanguageRegistry.addName(guns, "Gun");
-        guns.setItemName("stuff");
         //registerHandlers();
         TickRegistry.registerTickHandler(this, Side.SERVER);
         proxy.registerRenderTickHandler();

@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import net.minecraft.client.settings.KeyBinding;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
-import f4113n.Borderlands2Mod.common.BL2Core;
+import f4113n.Borderlands2Mod.BL2Core;
 
 public class BL2KeyHandler extends KeyHandler
 {

@@ -12,7 +12,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
-import f4113n.Borderlands2Mod.common.BL2Core;
+import f4113n.Borderlands2Mod.BL2Core;
 
 public class EntityGrenade extends EntityThrowable
 {

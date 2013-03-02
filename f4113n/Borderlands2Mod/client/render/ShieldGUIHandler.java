@@ -23,6 +23,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 import org.lwjgl.opengl.GL11;
 
@@ -30,10 +31,12 @@ import vazkii.codebase.common.CommonUtils;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
-import f4113n.Borderlands2Mod.common.BL2Core;
+import cpw.mods.fml.relauncher.Side;
+import f4113n.Borderlands2Mod.BL2Core;
 import f4113n.Borderlands2Mod.common.Reference;
 import f4113n.Borderlands2Mod.common.item.ItemArmorShield;
 import f4113n.Borderlands2Mod.common.item.ItemArmorShield.ShieldAtributes;
+import f4113n.core.Platform;
 
 public class ShieldGUIHandler implements ITickHandler {
 
@@ -61,8 +64,11 @@ public class ShieldGUIHandler implements ITickHandler {
                 }
                 if (player.isDead == false){
 //		            if (player.getCurrentEquippedItem().itemID == BL2Core.guns.shiftedIndex || player.getCurrentEquippedItem().itemID == BL2Core.grenade.shiftedIndex){
-            		BL2Core.proxy.initItemRenderer(BL2Core.guns.itemID);
-            		BL2Core.proxy.initItemRenderer(BL2Core.grenade.itemID);
+                	if(Platform.getSide() == Side.CLIENT)
+                	{
+                	    MinecraftForgeClient.registerItemRenderer(BL2Core.guns.itemID, new RenderGunInHand());
+                	    MinecraftForgeClient.registerItemRenderer(BL2Core.grenade.itemID, new RenderGrenadeInHand());
+                	}
 //		            }
                 }
             }

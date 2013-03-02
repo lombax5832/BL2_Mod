@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import f4113n.Borderlands2Mod.common.BL2Core;
+import f4113n.Borderlands2Mod.BL2Core;
 import f4113n.Borderlands2Mod.common.entity.EntityGrenade;
 import f4113n.Borderlands2Mod.common.item.ItemGun;
 

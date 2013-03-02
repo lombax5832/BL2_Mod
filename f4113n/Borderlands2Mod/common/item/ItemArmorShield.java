@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.IArmorTextureProvider;
 import net.minecraftforge.common.ISpecialArmor;
-import f4113n.Borderlands2Mod.common.BL2Core;
+import f4113n.Borderlands2Mod.BL2Core;
 import f4113n.Borderlands2Mod.common.handler.IItemTickListener;
 
 public class ItemArmorShield extends ItemArmor implements ISpecialArmor, IItemTickListener, IArmorTextureProvider

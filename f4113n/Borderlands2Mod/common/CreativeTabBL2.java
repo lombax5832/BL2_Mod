@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.StringTranslate;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import f4113n.Borderlands2Mod.BL2Core;
 
 public final class CreativeTabBL2 extends CreativeTabs
 {

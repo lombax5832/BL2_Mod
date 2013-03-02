@@ -6,7 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import f4113n.Borderlands2Mod.common.BL2Core;
+import f4113n.Borderlands2Mod.BL2Core;
 
 public class ItemBullets extends Item
 {
